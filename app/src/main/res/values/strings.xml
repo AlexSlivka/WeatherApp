@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="city_text">CITY</string>
+    <string name="temp_now_initial">10</string>
+    <string name="precipitation_now_initial">sunny</string>
+    <string name="date_initial">date</string>
+    <string name="today_text">Today</string>
+    <string name="temperature_at_day_text">temperature at day</string>
+    <string name="temperature_at_night_text">temperature at night</string>
+    <string name="chance_of_rain_text">сhance of rain</string>
+    <string name="wind_text">wind</string>
+    <string name="tomorrow_text">Tomorrow</string>
+    <string name="update_text">UPDATE</string>
+    <string name="change_city_text">CHANGE CITY</string>
+    <string name="temp_celsius">%d "\u2103"</string>
+    <string name="chance_of_rain_template">%d %%</string>
+    <string name="wind_template">%d m "/" s</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Погода</string>
+    <string name="city_text">ГОРОД</string>
+    <string name="temp_now_initial">10</string>
+    <string name="precipitation_now_initial">солнечно</string>
+    <string name="date_initial">дата</string>
+    <string name="today_text">Сегодня</string>
+    <string name="temperature_at_day_text">температура днем</string>
+    <string name="temperature_at_night_text">температура ночью</string>
+    <string name="chance_of_rain_text">вероятность дождя</string>
+    <string name="wind_text">ветер</string>
+    <string name="tomorrow_text">Завтра</string>
+    <string name="update_text">ОБНОВИТЬ</string>
+    <string name="change_city_text">ИЗМЕНИТЬ ГОРОД</string>
+    <string name="temp_celsius">%d "\u2103"</string>
+    <string name="chance_of_rain_template">%d %%</string>
+    <string name="wind_template">%d м "/" с</string>
+</resources>
