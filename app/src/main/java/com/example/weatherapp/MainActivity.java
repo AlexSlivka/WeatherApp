@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initViews();
-        setDate();
-        setValueToView();
-        setUpdateClickListener();
+        setContentView(R.layout.change_city);
+       initViews();
+       //setDate();
+        //setValueToView();
+       // setUpdateClickListener();
     }
 
     private void setUpdateClickListener() {

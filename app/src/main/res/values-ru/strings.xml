@@ -9,11 +9,23 @@
     <string name="temperature_at_day_text">температура днем</string>
     <string name="temperature_at_night_text">температура ночью</string>
     <string name="chance_of_rain_text">вероятность дождя</string>
-    <string name="wind_text">ветер</string>
+    <string name="wind_text">скорость ветра</string>
     <string name="tomorrow_text">Завтра</string>
     <string name="update_text">ОБНОВИТЬ</string>
     <string name="change_city_text">ИЗМЕНИТЬ ГОРОД</string>
     <string name="temp_celsius">%d "\u2103"</string>
     <string name="chance_of_rain_template">%d %%</string>
     <string name="wind_template">%d м "/" с</string>
+    <string name="pressure_text">pressure</string>
+    <string name="confirm_selection">confirm selection</string>
+    <string name="additional_settings">additional settings</string>
+    <string name="select_city">select city</string>
+    <string name="moscow_text">Moscow</string>
+    <string name="saint_petersburg_text">Saint Petersburg</string>
+    <string name="berlin_text">Berlin</string>
+    <string name="london_text">London</string>
+    <string name="paris_text">Paris</string>
+    <string name="prague_text">Prague</string>
+    <string name="rome_text">Rome</string>
+    <string name="madrid_text">Madrid</string>
 </resources>

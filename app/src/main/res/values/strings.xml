@@ -8,11 +8,23 @@
     <string name="temperature_at_day_text">temperature at day</string>
     <string name="temperature_at_night_text">temperature at night</string>
     <string name="chance_of_rain_text">сhance of rain</string>
-    <string name="wind_text">wind</string>
+    <string name="wind_text">wind speed</string>
     <string name="tomorrow_text">Tomorrow</string>
     <string name="update_text">UPDATE</string>
     <string name="change_city_text">CHANGE CITY</string>
     <string name="temp_celsius">%d "\u2103"</string>
     <string name="chance_of_rain_template">%d %%</string>
     <string name="wind_template">%d m "/" s</string>
+    <string name="pressure_text">pressure</string>
+    <string name="confirm_selection">confirm selection</string>
+    <string name="additional_settings">additional settings</string>
+    <string name="select_city">select city</string>
+    <string name="moscow_text">Moscow</string>
+    <string name="saint_petersburg_text">Saint Petersburg</string>
+    <string name="berlin_text">Berlin</string>
+    <string name="london_text">London</string>
+    <string name="paris_text">Paris</string>
+    <string name="prague_text">Prague</string>
+    <string name="rome_text">Rome</string>
+    <string name="madrid_text">Madrid</string>
 </resources>
