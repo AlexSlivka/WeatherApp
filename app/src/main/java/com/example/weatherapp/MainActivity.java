@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
        //setDate();
         //setValueToView();
        // setUpdateClickListener();
+        // Пришлось задокумментировать эти строки, с ними не хотела запускаться. Они потом понадобятся.
     }
 
     private void setUpdateClickListener() {
