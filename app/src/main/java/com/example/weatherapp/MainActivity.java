@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String CHANCE_OF_RAIN_SAVE = "RAIN";
     public static final String WIND_SAVE = "WIND";
 
+//для ветки lesson03
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
