@@ -1,10 +1,13 @@
 package com.example.weatherapp;
 
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,6 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
     private TextView city;
     private TextView tempNow;
     private TextView precipitationNow;
@@ -34,14 +38,26 @@ public class MainActivity extends AppCompatActivity {
     private int chanceOfRainDefault = 0;
     private int windDefault = 0;
 
+    private static final String LIFECYCLE = "LIFE_CYCLE";
+    public static final String TEMP_SAVE = "TEMP";
+    public static final String CHANCE_OF_RAIN_SAVE = "RAIN";
+    public static final String WIND_SAVE = "WIND";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.change_city);
+        setContentView(R.layout.activity_main);
        initViews();
-       //setDate();
-        //setValueToView();
-       // setUpdateClickListener();
+       setDate();
+       setValueToView();
+       setUpdateClickListener();
+
+        if(savedInstanceState == null){
+            makeToast("Первый запуск - onCreate()");
+        } else {
+            makeToast("Повторный запуск - onCreate()");
+        }
     }
 
     private void setUpdateClickListener() {
@@ -95,5 +111,65 @@ public class MainActivity extends AppCompatActivity {
         dateNow.setText(dateText);
     }
 
+    private void makeToast(String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Log.d(LIFECYCLE,message);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        makeToast("onStart()");
+    }
+
+    @Override
+    protected void onSaveInstanceState (Bundle saveInstanceState){
+        super .onSaveInstanceState(saveInstanceState);
+        makeToast("onSaveInstanceState()");
+        saveInstanceState.putInt( TEMP_SAVE , tempDefault);
+        saveInstanceState.putInt( CHANCE_OF_RAIN_SAVE , chanceOfRainDefault);
+        saveInstanceState.putInt( WIND_SAVE , windDefault);// Сохраняем
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        makeToast("Повторный запуск - onRestoreInstanceState()");
+        tempDefault = savedInstanceState.getInt(TEMP_SAVE);
+        chanceOfRainDefault = savedInstanceState.getInt(CHANCE_OF_RAIN_SAVE);
+        windDefault = savedInstanceState.getInt(WIND_SAVE);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        makeToast("onResume()");
+        setValueToView();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        makeToast("onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        makeToast("onStop()");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        makeToast("onRestart()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        makeToast("onDestroy()");
+    }
 
 }
