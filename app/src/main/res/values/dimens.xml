@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="city_size_text">50sp</dimen>
-    <dimen name="temp_now_sise_text">70sp</dimen>
+    <dimen name="city_size_text">30sp</dimen>
+    <dimen name="temp_now_sise_text">60sp</dimen>
     <dimen name="basic_size_text">20sp</dimen>
 </resources>

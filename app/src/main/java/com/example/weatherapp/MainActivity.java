@@ -16,6 +16,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private TextView city;
     private TextView tempNow;
     private TextView precipitationNow;
@@ -24,10 +25,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView tempAtNightOfToday;
     private TextView chanceOfRainToday;
     private TextView windToday;
+    private TextView pressureToday;
     private TextView tempAtDayOfTomorrow;
     private TextView tempAtNightOfTomorrow;
     private TextView chanceOfRainTomorrow;
-    private TextView windTomorrow;
+
 
     private Button update;
     private Button changeCity;
@@ -37,11 +39,13 @@ public class MainActivity extends AppCompatActivity {
     private int tempDefault = 0;
     private int chanceOfRainDefault = 0;
     private int windDefault = 0;
+    private int pressureDefault = 100;
 
     private static final String LIFECYCLE = "LIFE_CYCLE";
     public static final String TEMP_SAVE = "TEMP";
     public static final String CHANCE_OF_RAIN_SAVE = "RAIN";
     public static final String WIND_SAVE = "WIND";
+    private static final String PRESSURE_SAVE = "PRESSURE";
 
 
     @Override
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 tempDefault += 5;
                 chanceOfRainDefault += 1;
                 windDefault += 2;
+                pressureDefault += 15;
 
                 setValueToView();
             }
@@ -80,11 +85,13 @@ public class MainActivity extends AppCompatActivity {
         tempAtNightOfToday.setText(getString(R.string.temp_celsius, tempDefault+3));
         chanceOfRainToday.setText(getString(R.string.chance_of_rain_template, chanceOfRainDefault+6));
         windToday.setText(getString(R.string.wind_template, windDefault+2));
+        pressureToday.setText(getString(R.string.pressure_template, pressureDefault+2));
+
 
         tempAtDayOfTomorrow.setText(getString(R.string.temp_celsius, tempDefault+8));
         tempAtNightOfTomorrow.setText(getString(R.string.temp_celsius, tempDefault+1));
         chanceOfRainTomorrow.setText(getString(R.string.chance_of_rain_template, chanceOfRainDefault+56));
-        windTomorrow.setText(getString(R.string.wind_template, windDefault+12));
+
     }
 
 
@@ -97,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
         tempAtNightOfToday =findViewById(R.id.temp_at_night_today_value);
         chanceOfRainToday = findViewById(R.id.chance_of_rain_today_value);
         windToday = findViewById(R.id.wind_today_value);
+        pressureToday = findViewById(R.id.pressure_today_value);
         tempAtDayOfTomorrow = findViewById(R.id.temp_at_day_tomorrow_value);
         tempAtNightOfTomorrow = findViewById(R.id.temp_at_night_tomorrow_value);
         chanceOfRainTomorrow = findViewById(R.id.chance_of_rain_tomorrow_value);
-        windTomorrow = findViewById(R.id.wind_tomorrow_value);
         update = findViewById(R.id.update_button);
         changeCity = findViewById(R.id.change_city_button);
     }
@@ -128,7 +135,10 @@ public class MainActivity extends AppCompatActivity {
         makeToast("onSaveInstanceState()");
         saveInstanceState.putInt( TEMP_SAVE , tempDefault);
         saveInstanceState.putInt( CHANCE_OF_RAIN_SAVE , chanceOfRainDefault);
-        saveInstanceState.putInt( WIND_SAVE , windDefault);// Сохраняем
+        saveInstanceState.putInt( WIND_SAVE , windDefault);
+        saveInstanceState.putInt( PRESSURE_SAVE , pressureDefault);
+
+        // Сохраняем
     }
 
     @Override
@@ -138,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         tempDefault = savedInstanceState.getInt(TEMP_SAVE);
         chanceOfRainDefault = savedInstanceState.getInt(CHANCE_OF_RAIN_SAVE);
         windDefault = savedInstanceState.getInt(WIND_SAVE);
+        pressureDefault = savedInstanceState.getInt(PRESSURE_SAVE);
     }
 
 

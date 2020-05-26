@@ -15,6 +15,7 @@
     <string name="temp_celsius">%d "\u2103"</string>
     <string name="chance_of_rain_template">%d %%</string>
     <string name="wind_template">%d m "/" s</string>
+    <string name="pressure_template">%d mm</string>
     <string name="pressure_text">pressure</string>
     <string name="confirm_selection">confirm selection</string>
     <string name="additional_settings">additional settings</string>
