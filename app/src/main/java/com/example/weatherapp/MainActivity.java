@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+//для ветки lesson04
+
 public class MainActivity extends AppCompatActivity {
 
     private String city = "CITY";
