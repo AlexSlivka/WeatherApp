@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ChangeCityActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/select_city_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/select_city"
         android:textSize="@dimen/basic_size_text"
-        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintBottom_toBottomOf="@+id/enter_city_editText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.761" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/enter_city_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -30,31 +30,31 @@
         android:textSize="@dimen/basic_size_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.857"
-        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/select_city_textView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/wind_speed_checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:text="@string/wind_text"
         android:textSize="@dimen/basic_size_text"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox2"
+        app:layout_constraintBottom_toTopOf="@+id/pressure_checkBox"
         app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/pressure_checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:text="@string/pressure_text"
         android:textSize="@dimen/basic_size_text"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintStart_toStartOf="@+id/checkBox" />
+        app:layout_constraintBottom_toTopOf="@+id/confirm_selection_button"
+        app:layout_constraintStart_toStartOf="@+id/wind_speed_checkBox" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/confirm_selection_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/confirm_selection"
@@ -71,14 +71,14 @@
         android:text="@string/additional_settings"
         android:textSize="@dimen/basic_size_text"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox"
-        app:layout_constraintStart_toStartOf="@+id/checkBox" />
+        app:layout_constraintBottom_toTopOf="@+id/wind_speed_checkBox"
+        app:layout_constraintStart_toStartOf="@+id/wind_speed_checkBox" />
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText">
+        app:layout_constraintTop_toBottomOf="@+id/enter_city_editText">
 
         <LinearLayout
             android:layout_width="match_parent"

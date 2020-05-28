@@ -1,6 +1,8 @@
 package com.example.weatherapp;
 
 
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +18,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    private TextView city;
+    private String city = "CITY";
+    private TextView cityTextView;
     private TextView tempNow;
     private TextView precipitationNow;
     private TextView dateNow;
@@ -34,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private Button update;
     private Button changeCity;
 
+    private boolean visibilityWindTextView = false;
+    private boolean visibilityPressureTextView = false;
+
+
     Date currentDate = new Date();
 
     private int tempDefault = 0;
@@ -46,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String CHANCE_OF_RAIN_SAVE = "RAIN";
     public static final String WIND_SAVE = "WIND";
     private static final String PRESSURE_SAVE = "PRESSURE";
+    private int requestCodeChangeCityActivity = 100;
 
 
     @Override
@@ -56,11 +63,38 @@ public class MainActivity extends AppCompatActivity {
        setDate();
        setValueToView();
        setUpdateClickListener();
+       changeCityClickListener();
 
         if(savedInstanceState == null){
             makeToast("Первый запуск - onCreate()");
         } else {
             makeToast("Повторный запуск - onCreate()");
+        }
+    }
+
+    private void changeCityClickListener() {
+        changeCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity. this , ChangeCityActivity. class );
+                startActivityForResult(intent,requestCodeChangeCityActivity);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == requestCodeChangeCityActivity){
+            if (resultCode == RESULT_OK && data != null){
+                city = data.getStringExtra(ChangeCityActivity.CITY_DATA_KEY);
+                visibilityWindTextView = data.getBooleanExtra(ChangeCityActivity.WIND_CHECKBOX_DATA_KEY,false);
+                visibilityPressureTextView = data.getBooleanExtra(ChangeCityActivity.PRESSURE_CHECKBOX_DATA_KEY,false);
+                makeToast("visibilityWindTextView is " + visibilityWindTextView);
+                makeToast("visibilityPressureTextView is " + visibilityPressureTextView);
+
+
+            }
         }
     }
 
@@ -79,15 +113,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     public void setValueToView() {
+        cityTextView.setText(city);
         tempNow.setText(getString(R.string.temp_celsius, tempDefault+10));
         tempAtDayOfToday.setText(getString(R.string.temp_celsius, tempDefault+12));
         tempAtNightOfToday.setText(getString(R.string.temp_celsius, tempDefault+3));
         chanceOfRainToday.setText(getString(R.string.chance_of_rain_template, chanceOfRainDefault+6));
         windToday.setText(getString(R.string.wind_template, windDefault+2));
         pressureToday.setText(getString(R.string.pressure_template, pressureDefault+2));
-
-
         tempAtDayOfTomorrow.setText(getString(R.string.temp_celsius, tempDefault+8));
         tempAtNightOfTomorrow.setText(getString(R.string.temp_celsius, tempDefault+1));
         chanceOfRainTomorrow.setText(getString(R.string.chance_of_rain_template, chanceOfRainDefault+56));
@@ -96,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initViews() {
-        city = findViewById(R.id.city_textView);
+        cityTextView = findViewById(R.id.city_textView);
         tempNow = findViewById(R.id.temp_now_textView);
         precipitationNow = findViewById(R.id.precipitation_now_textView);
         dateNow =findViewById(R.id.date_now_textView);
@@ -127,6 +162,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         makeToast("onStart()");
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        makeToast("onResume()");
+        setValueToView();
     }
 
     @Override
@@ -152,35 +196,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        makeToast("onResume()");
-        setValueToView();
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        makeToast("onPause()");
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        makeToast("onStop()");
-    }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        makeToast("onRestart()");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        makeToast("onDestroy()");
-    }
 
 }
