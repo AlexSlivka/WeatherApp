@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class ChangeCityActivity extends AppCompatActivity {
-    private String cityChange =" ";
+    private String cityChange = " ";
     private TextView cityEnterEditText;
     private CheckBox windSpeedChBox;
     private CheckBox pressureChBox;
@@ -24,7 +24,6 @@ public class ChangeCityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_city);
         initViewsChangeCityActivity();
-
         setClickListenerConfirmSelectionBtn();
     }
 
@@ -34,10 +33,10 @@ public class ChangeCityActivity extends AppCompatActivity {
             public void onClick(View v) {
                 cityChange = cityEnterEditText.getText().toString();
                 Intent cityDataIntent = new Intent();
-                cityDataIntent.putExtra(CITY_DATA_KEY,cityChange);
-                cityDataIntent.putExtra(WIND_CHECKBOX_DATA_KEY,windSpeedChBox.isChecked());
-                cityDataIntent.putExtra(PRESSURE_CHECKBOX_DATA_KEY,pressureChBox.isChecked());
-                setResult(RESULT_OK,cityDataIntent);
+                cityDataIntent.putExtra(CITY_DATA_KEY, cityChange);
+                cityDataIntent.putExtra(WIND_CHECKBOX_DATA_KEY, windSpeedChBox.isChecked());
+                cityDataIntent.putExtra(PRESSURE_CHECKBOX_DATA_KEY, pressureChBox.isChecked());
+                setResult(RESULT_OK, cityDataIntent);
                 finish();
             }
         });
