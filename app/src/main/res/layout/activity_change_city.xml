@@ -53,15 +53,6 @@
         app:layout_constraintBottom_toTopOf="@+id/confirm_selection_button"
         app:layout_constraintStart_toStartOf="@+id/wind_speed_checkBox" />
 
-    <Button
-        android:id="@+id/confirm_selection_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/confirm_selection"
-        android:textSize="@dimen/basic_size_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
@@ -142,5 +133,25 @@
                 android:textSize="@dimen/basic_size_text" />
         </LinearLayout>
     </ScrollView>
+
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@android:string/cancel"
+        android:textSize="@dimen/basic_size_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/confirm_selection_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_selection"
+        android:textSize="@dimen/basic_size_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cancel_button" />
 
 </android.support.constraint.ConstraintLayout>

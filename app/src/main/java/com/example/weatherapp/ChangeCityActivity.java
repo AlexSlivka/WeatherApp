@@ -13,6 +13,7 @@ public class ChangeCityActivity extends AppCompatActivity {
     private TextView cityEnterEditText;
     private CheckBox windSpeedChBox;
     private CheckBox pressureChBox;
+    private Button cancelBtn;
     private Button confirmSelectionBtn;
 
     public final static String CITY_DATA_KEY = "CITYDATAKEY";
@@ -25,6 +26,16 @@ public class ChangeCityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_change_city);
         initViewsChangeCityActivity();
         setClickListenerConfirmSelectionBtn();
+        setClickListenerCancelBtn();
+    }
+
+    private void setClickListenerCancelBtn() {
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void setClickListenerConfirmSelectionBtn() {
@@ -46,6 +57,7 @@ public class ChangeCityActivity extends AppCompatActivity {
         cityEnterEditText = findViewById(R.id.enter_city_editText);
         windSpeedChBox = findViewById(R.id.wind_speed_checkBox);
         pressureChBox = findViewById(R.id.pressure_checkBox);
+        cancelBtn = findViewById(R.id.cancel_button);
         confirmSelectionBtn = findViewById(R.id.confirm_selection_button);
     }
 }
