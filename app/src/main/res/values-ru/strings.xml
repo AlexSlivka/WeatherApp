@@ -16,10 +16,11 @@
     <string name="temp_celsius">%d "\u2103"</string>
     <string name="chance_of_rain_template">%d %%</string>
     <string name="wind_template">%d м "/" с</string>
-    <string name="pressure_text">pressure</string>
-    <string name="confirm_selection">confirm selection</string>
-    <string name="additional_settings">additional settings</string>
-    <string name="select_city">select city</string>
+    <string name="pressure_text">давление</string>
+    <string name="pressure_template">%d мм</string>
+    <string name="confirm_selection">подтвердить выбор</string>
+    <string name="additional_settings">дполнительные настройки</string>
+    <string name="select_city">выбрать город</string>
     <string name="moscow_text">Moscow</string>
     <string name="saint_petersburg_text">Saint Petersburg</string>
     <string name="berlin_text">Berlin</string>
@@ -28,4 +29,5 @@
     <string name="prague_text">Prague</string>
     <string name="rome_text">Rome</string>
     <string name="madrid_text">Madrid</string>
+    <string name="history_button_text">ИСТОРИЯ</string>
 </resources>

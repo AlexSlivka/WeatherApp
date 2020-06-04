@@ -28,4 +28,5 @@
     <string name="prague_text">Prague</string>
     <string name="rome_text">Rome</string>
     <string name="madrid_text">Madrid</string>
+    <string name="history_button_text">HISTORY</string>
 </resources>

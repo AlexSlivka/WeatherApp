@@ -2,8 +2,10 @@ package com.example.weatherapp;
 
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView tempAtNightOfTomorrow;
     private TextView chanceOfRainTomorrow;
 
-    private Button update;
-    private Button changeCity;
+    private Button updateBtn;
+    private Button historyBtn;
+    private Button changeCityBtn;
 
     private boolean visibilityWindTextView = false;
     private boolean visibilityPressureTextView = false;
@@ -62,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         setDate();
         setValueToView();
         setUpdateClickListener();
+        setHistoryClickListener();
         changeCityClickListener();
-
         if (savedInstanceState == null) {
             makeToast("Первый запуск - onCreate()");
         } else {
@@ -71,8 +74,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setHistoryClickListener() {
+        historyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentHistory = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(intentHistory);
+            }
+        });
+    }
+
     private void changeCityClickListener() {
-        changeCity.setOnClickListener(new View.OnClickListener() {
+        changeCityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ChangeCityActivity.class);
@@ -118,20 +131,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpdateClickListener() {
-        update.setOnClickListener(new View.OnClickListener() {
+        updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tempDefault += 5;
                 chanceOfRainDefault += 1;
                 windDefault += 2;
                 pressureDefault += 15;
-
                 setValueToView();
             }
         });
 
     }
-
 
     public void setValueToView() {
         cityTextView.setText(city);
@@ -145,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
         tempAtNightOfTomorrow.setText(getString(R.string.temp_celsius, tempDefault + 1));
         chanceOfRainTomorrow.setText(getString(R.string.chance_of_rain_template, chanceOfRainDefault + 56));
     }
-
 
     private void initViews() {
         cityTextView = findViewById(R.id.city_textView);
@@ -162,8 +172,9 @@ public class MainActivity extends AppCompatActivity {
         tempAtDayOfTomorrow = findViewById(R.id.temp_at_day_tomorrow_value);
         tempAtNightOfTomorrow = findViewById(R.id.temp_at_night_tomorrow_value);
         chanceOfRainTomorrow = findViewById(R.id.chance_of_rain_tomorrow_value);
-        update = findViewById(R.id.update_button);
-        changeCity = findViewById(R.id.change_city_button);
+        updateBtn = findViewById(R.id.update_button);
+        historyBtn = findViewById(R.id.history_button);
+        changeCityBtn = findViewById(R.id.change_city_button);
     }
 
     private void setDate() {
@@ -175,12 +186,6 @@ public class MainActivity extends AppCompatActivity {
     private void makeToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         Log.d(LIFECYCLE, message);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        makeToast("onStart()");
     }
 
     @Override
