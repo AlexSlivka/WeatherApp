@@ -1,5 +1,6 @@
 package com.example.weatherapp;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerDataAdapterHistory extends RecyclerView.Adapter<RecyclerDataAdapterHistory.ViewHolder>  {
     private String[] data;
+    private Context context;
     public RecyclerDataAdapterHistory(String[] data){
         this.data = data;
     }
@@ -26,7 +28,6 @@ public class RecyclerDataAdapterHistory extends RecyclerView.Adapter<RecyclerDat
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String text = data[position];
         holder.textView.setText(text);
-
     }
 
     @Override

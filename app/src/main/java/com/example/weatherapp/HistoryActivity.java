@@ -9,7 +9,8 @@ import android.widget.LinearLayout;
 
 public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recyclerViewHistory;
-    private String[] listData = new String[]{"Сегодня", "Вчера","Позавчера","Позапозавчера","Давно"};
+    private String[] listData;
+    //String[] cities = getResources().getStringArray(R.array.cities);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +22,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void setupRecyclerViewHistory() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
+        listData = getResources().getStringArray(R.array.history_days_array);
         RecyclerDataAdapterHistory adapterHistory = new RecyclerDataAdapterHistory(listData);
         recyclerViewHistory.setLayoutManager(layoutManager);
         recyclerViewHistory.setAdapter(adapterHistory);
