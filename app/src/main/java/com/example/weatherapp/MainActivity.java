@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 setValueToView();
             }
         });
-
     }
 
     public void setValueToView() {

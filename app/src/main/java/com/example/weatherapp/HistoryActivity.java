@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recyclerViewHistory;
     private String[] listData;
-    //String[] cities = getResources().getStringArray(R.array.cities);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

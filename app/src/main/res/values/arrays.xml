@@ -8,5 +8,13 @@
         <item>Давным-давно -10"\u2103"</item>
     </string-array>
 
+    <string-array name="cities_array">
+        <item>Moscow</item>
+        <item>Saint Petersburg</item>
+        <item>Berlin</item>
+        <item>London</item>
+        <item>Paris</item>
+        <item>Rome</item>
+    </string-array>
 
 </resources>

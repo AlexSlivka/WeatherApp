@@ -8,16 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerDataAdapterHistory extends RecyclerView.Adapter<RecyclerDataAdapterHistory.ViewHolder>  {
+public class RecyclerDataAdapterCities extends RecyclerView.Adapter<RecyclerDataAdapterCities.ViewHolder>  {
     private String[] data;
-    public RecyclerDataAdapterHistory(String[] data){
+    public RecyclerDataAdapterCities(String[] data){
         this.data = data;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_layout_history, parent,
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_layout_cities, parent,
                 false);
         return new ViewHolder(view);
     }
@@ -37,7 +37,7 @@ public class RecyclerDataAdapterHistory extends RecyclerView.Adapter<RecyclerDat
         TextView textView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.item_textview_history);
+            textView = itemView.findViewById(R.id.item_textview_cities);
         }
     }
 }

@@ -2,6 +2,9 @@ package com.example.weatherapp;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +19,9 @@ public class ChangeCityActivity extends AppCompatActivity {
     private Button cancelBtn;
     private Button confirmSelectionBtn;
 
+    private RecyclerView recyclerViewCities;
+    private String[] listDataCities;
+
     public final static String CITY_DATA_KEY = "CITYDATAKEY";
     public final static String WIND_CHECKBOX_DATA_KEY = "WINDDATAKEY";
     public final static String PRESSURE_CHECKBOX_DATA_KEY = "PRESSUREDATAKEY";
@@ -25,8 +31,17 @@ public class ChangeCityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_city);
         initViewsChangeCityActivity();
+        setupRecyclerViewCities();
         setClickListenerConfirmSelectionBtn();
         setClickListenerCancelBtn();
+    }
+
+    private void setupRecyclerViewCities() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
+        listDataCities = getResources().getStringArray(R.array.cities_array);
+        RecyclerDataAdapterCities adapterCities = new RecyclerDataAdapterCities(listDataCities);
+        recyclerViewCities.setLayoutManager(layoutManager);
+        recyclerViewCities.setAdapter(adapterCities);
     }
 
     private void setClickListenerCancelBtn() {
@@ -59,5 +74,6 @@ public class ChangeCityActivity extends AppCompatActivity {
         pressureChBox = findViewById(R.id.pressure_checkBox);
         cancelBtn = findViewById(R.id.cancel_button);
         confirmSelectionBtn = findViewById(R.id.confirm_selection_button);
+        recyclerViewCities = findViewById(R.id.recycler_view_history);
     }
 }
