@@ -1,6 +1,7 @@
 package com.example.weatherapp;
 
 import android.content.Intent;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,8 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ChangeCityActivity extends AppCompatActivity {
+public class ChangeCityActivity extends AppCompatActivity implements OnItemCitiesClick {
     private String cityChange = " ";
     private TextView cityEnterEditText;
     private CheckBox windSpeedChBox;
@@ -39,7 +41,7 @@ public class ChangeCityActivity extends AppCompatActivity {
     private void setupRecyclerViewCities() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
         listDataCities = getResources().getStringArray(R.array.cities_array);
-        RecyclerDataAdapterCities adapterCities = new RecyclerDataAdapterCities(listDataCities);
+        RecyclerDataAdapterCities adapterCities = new RecyclerDataAdapterCities(listDataCities,this);
         recyclerViewCities.setLayoutManager(layoutManager);
         recyclerViewCities.setAdapter(adapterCities);
     }
@@ -75,5 +77,11 @@ public class ChangeCityActivity extends AppCompatActivity {
         cancelBtn = findViewById(R.id.cancel_button);
         confirmSelectionBtn = findViewById(R.id.confirm_selection_button);
         recyclerViewCities = findViewById(R.id.recycler_view_history);
+    }
+
+    @Override
+    public void onItemCitiesClicked(String itemText) {
+        Toast.makeText(getApplication(),itemText,Toast.LENGTH_SHORT).show();
+        cityEnterEditText.setText(itemText);
     }
 }

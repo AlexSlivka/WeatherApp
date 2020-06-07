@@ -10,9 +10,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerDataAdapterCities extends RecyclerView.Adapter<RecyclerDataAdapterCities.ViewHolder>  {
     private String[] data;
-    public RecyclerDataAdapterCities(String[] data){
+    private OnItemCitiesClick onItemCitiesClickCallback;
+
+
+    public RecyclerDataAdapterCities(String[] data, OnItemCitiesClick onItemCitiesClickCallback){
         this.data = data;
+        this.onItemCitiesClickCallback = onItemCitiesClickCallback;
     }
+
+    private void setOnClickForItem(@NonNull ViewHolder holder, final String text) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onItemCitiesClickCallback != null) {
+                    onItemCitiesClickCallback.onItemCitiesClicked(text);
+                }
+            }
+        });
+    }
+
 
     @NonNull
     @Override
@@ -26,6 +42,7 @@ public class RecyclerDataAdapterCities extends RecyclerView.Adapter<RecyclerData
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String text = data[position];
         holder.textView.setText(text);
+        setOnClickForItem(holder, text);
     }
 
     @Override
