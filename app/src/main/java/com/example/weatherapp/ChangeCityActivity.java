@@ -13,9 +13,13 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.regex.Pattern;
+
 public class ChangeCityActivity extends AppCompatActivity implements OnItemCitiesClick {
     private String cityChange = " ";
-    private TextView cityEnterEditText;
+    private TextInputEditText cityEnterEditText;
     private CheckBox windSpeedChBox;
     private CheckBox pressureChBox;
     private Button cancelBtn;
@@ -28,6 +32,9 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
     public final static String WIND_CHECKBOX_DATA_KEY = "WINDDATAKEY";
     public final static String PRESSURE_CHECKBOX_DATA_KEY = "PRESSUREDATAKEY";
 
+    Pattern checkCityEnterEditText = Pattern.compile("^[A-Z][a-z]{2,}$");
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +43,53 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
         setupRecyclerViewCities();
         setClickListenerConfirmSelectionBtn();
         setClickListenerCancelBtn();
+        checkCityEnterEditTextField();
+    }
+
+    private void checkCityEnterEditTextField() {
+        // Проверка ввода названия города при потере фокуса
+        cityEnterEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) return;
+                TextView tv = (TextView) v;
+                validate(tv, checkCityEnterEditText, "Invalid city name");
+            }
+        });
+    }
+
+
+    // Валидация
+    private void validate(TextView tv, Pattern check, String message) {
+        String value = tv.getText().toString();
+        if (check.matcher(value).matches()) {    // Проверим на основе регулярных выражений
+            hideError(tv);
+        } else {
+            showError(tv, message);
+        }
+    }
+
+    private boolean validateOnConfirmCelection(TextView tv, Pattern check, String message) {
+        Boolean result = true;
+        String value = tv.getText().toString();
+        if (check.matcher(value).matches()) {    // Проверим на основе регулярных выражений
+            hideError(tv);
+        } else {
+            showError(tv, message);
+            result = false;
+        }
+        return result;
+    }
+
+
+    // Показать ошибку
+    private void showError(TextView view, String message) {
+        view.setError(message);
+    }
+
+    // спрятать ошибку
+    private void hideError(TextView view) {
+        view.setError(null);
     }
 
     private void setupRecyclerViewCities() {
@@ -60,12 +114,15 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
             @Override
             public void onClick(View v) {
                 cityChange = cityEnterEditText.getText().toString();
-                Intent cityDataIntent = new Intent();
-                cityDataIntent.putExtra(CITY_DATA_KEY, cityChange);
-                cityDataIntent.putExtra(WIND_CHECKBOX_DATA_KEY, windSpeedChBox.isChecked());
-                cityDataIntent.putExtra(PRESSURE_CHECKBOX_DATA_KEY, pressureChBox.isChecked());
-                setResult(RESULT_OK, cityDataIntent);
-                finish();
+                if(validateOnConfirmCelection(cityEnterEditText, checkCityEnterEditText, "Invalid city name"))
+                {
+                    Intent cityDataIntent = new Intent();
+                    cityDataIntent.putExtra(CITY_DATA_KEY, cityChange);
+                    cityDataIntent.putExtra(WIND_CHECKBOX_DATA_KEY, windSpeedChBox.isChecked());
+                    cityDataIntent.putExtra(PRESSURE_CHECKBOX_DATA_KEY, pressureChBox.isChecked());
+                    setResult(RESULT_OK, cityDataIntent);
+                    finish();
+                }
             }
         });
     }
