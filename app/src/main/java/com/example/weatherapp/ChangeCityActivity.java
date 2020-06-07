@@ -41,7 +41,7 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
     private void setupRecyclerViewCities() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
         listDataCities = getResources().getStringArray(R.array.cities_array);
-        RecyclerDataAdapterCities adapterCities = new RecyclerDataAdapterCities(listDataCities,this);
+        RecyclerDataAdapterCities adapterCities = new RecyclerDataAdapterCities(listDataCities, this);
         recyclerViewCities.setLayoutManager(layoutManager);
         recyclerViewCities.setAdapter(adapterCities);
     }
@@ -81,7 +81,7 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
 
     @Override
     public void onItemCitiesClicked(String itemText) {
-        Toast.makeText(getApplication(),itemText,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplication(), itemText, Toast.LENGTH_SHORT).show();
         cityEnterEditText.setText(itemText);
     }
 }

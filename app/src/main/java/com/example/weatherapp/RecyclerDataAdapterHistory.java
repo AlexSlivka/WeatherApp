@@ -8,9 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerDataAdapterHistory extends RecyclerView.Adapter<RecyclerDataAdapterHistory.ViewHolder>  {
+public class RecyclerDataAdapterHistory extends RecyclerView.Adapter<RecyclerDataAdapterHistory.ViewHolder> {
     private String[] data;
-    public RecyclerDataAdapterHistory(String[] data){
+
+    public RecyclerDataAdapterHistory(String[] data) {
         this.data = data;
     }
 
@@ -33,8 +34,9 @@ public class RecyclerDataAdapterHistory extends RecyclerView.Adapter<RecyclerDat
         return data == null ? 0 : data.length;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.item_textview_history);

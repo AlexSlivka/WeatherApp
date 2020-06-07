@@ -8,12 +8,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerDataAdapterCities extends RecyclerView.Adapter<RecyclerDataAdapterCities.ViewHolder>  {
+public class RecyclerDataAdapterCities extends RecyclerView.Adapter<RecyclerDataAdapterCities.ViewHolder> {
     private String[] data;
     private OnItemCitiesClick onItemCitiesClickCallback;
 
-
-    public RecyclerDataAdapterCities(String[] data, OnItemCitiesClick onItemCitiesClickCallback){
+    public RecyclerDataAdapterCities(String[] data, OnItemCitiesClick onItemCitiesClickCallback) {
         this.data = data;
         this.onItemCitiesClickCallback = onItemCitiesClickCallback;
     }
@@ -22,13 +21,12 @@ public class RecyclerDataAdapterCities extends RecyclerView.Adapter<RecyclerData
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onItemCitiesClickCallback != null) {
+                if (onItemCitiesClickCallback != null) {
                     onItemCitiesClickCallback.onItemCitiesClicked(text);
                 }
             }
         });
     }
-
 
     @NonNull
     @Override
@@ -50,8 +48,9 @@ public class RecyclerDataAdapterCities extends RecyclerView.Adapter<RecyclerData
         return data == null ? 0 : data.length;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.item_textview_cities);
