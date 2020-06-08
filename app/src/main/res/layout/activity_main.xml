@@ -74,6 +74,7 @@
         android:text="@string/today_text"
         android:textSize="@dimen/basic_size_text"
         android:textStyle="bold"
+        style="@style/HeadersStartEnd"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="@+id/linearLayout2" />
 
@@ -182,6 +183,7 @@
         android:gravity="center"
         android:text="@string/tomorrow_text"
         android:textSize="@dimen/basic_size_text"
+        style="@style/HeadersStartEnd"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4" />
 

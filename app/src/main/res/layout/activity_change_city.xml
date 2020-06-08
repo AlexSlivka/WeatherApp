@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,6 +55,7 @@
         android:text="@string/additional_settings"
         android:textSize="@dimen/basic_size_text"
         android:textStyle="bold"
+        style="@style/HeadersStartEnd"
         app:layout_constraintBottom_toTopOf="@+id/wind_speed_checkBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/wind_speed_checkBox" />
