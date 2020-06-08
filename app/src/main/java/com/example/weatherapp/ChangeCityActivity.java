@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.regex.Pattern;
@@ -120,8 +121,12 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
                     cityDataIntent.putExtra(CITY_DATA_KEY, cityChange);
                     cityDataIntent.putExtra(WIND_CHECKBOX_DATA_KEY, windSpeedChBox.isChecked());
                     cityDataIntent.putExtra(PRESSURE_CHECKBOX_DATA_KEY, pressureChBox.isChecked());
-                    setResult(RESULT_OK, cityDataIntent);
+                    Snackbar.make(cityEnterEditText, "City changed", Snackbar.LENGTH_LONG)
+                            .show();
                     finish();
+                } else {
+                    Snackbar.make(cityEnterEditText, "Check entered data", Snackbar.LENGTH_LONG)
+                            .show();
                 }
             }
         });
