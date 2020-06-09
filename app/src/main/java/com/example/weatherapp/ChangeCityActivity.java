@@ -34,8 +34,6 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
     public final static String PRESSURE_CHECKBOX_DATA_KEY = "PRESSUREDATAKEY";
 
     Pattern checkCityEnterEditText = Pattern.compile("^[A-Z][a-z]{2,}\\s*[A-Z]*[a-z]*$");
-    //Pattern checkCityEnterEditText = Pattern.compile("^[A-Z][a-z]{2,}$");
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +69,7 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
         }
     }
 
-    private boolean validateOnConfirmCelection(TextView tv, Pattern check, String message) {
+    private boolean validateOnConfirmSelection(TextView tv, Pattern check, String message) {
         Boolean result = true;
         String value = tv.getText().toString();
         if (check.matcher(value).matches()) {    // Проверим на основе регулярных выражений
@@ -116,8 +114,7 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
             @Override
             public void onClick(View v) {
                 cityChange = cityEnterEditText.getText().toString();
-                if(validateOnConfirmCelection(cityEnterEditText, checkCityEnterEditText, "Invalid city name"))
-                {
+                if (validateOnConfirmSelection(cityEnterEditText, checkCityEnterEditText, "Invalid city name")) {
                     Intent cityDataIntent = new Intent();
                     cityDataIntent.putExtra(CITY_DATA_KEY, cityChange);
                     cityDataIntent.putExtra(WIND_CHECKBOX_DATA_KEY, windSpeedChBox.isChecked());

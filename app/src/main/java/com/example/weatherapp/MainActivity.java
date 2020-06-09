@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LIFECYCLE = "LIFE_CYCLE";
     public static final String TEMP_SAVE = "TEMP";
+    public static final String CITY_SAVE = "CITY";
+    public static final String VISAB_WIND_SAVE = "VISIBILITY_WIND";
+    public static final String VISAB_PRESSURE_SAVE = "VISIBILITY_PRESSURE";
     public static final String CHANCE_OF_RAIN_SAVE = "RAIN";
     public static final String WIND_SAVE = "WIND";
     private static final String PRESSURE_SAVE = "PRESSURE";
@@ -104,9 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 visibilityPressureTextView = data.getBooleanExtra(ChangeCityActivity.PRESSURE_CHECKBOX_DATA_KEY, false);
                 setVisibilityWindTextView(visibilityWindTextView);
                 setVisibilityPressureTextView(visibilityPressureTextView);
-                makeToast("city changed on " + city);
-                makeToast("visibilityWindTextView is " + visibilityWindTextView);
-                makeToast("visibilityPressureTextView is " + visibilityPressureTextView);
             }
         }
     }
@@ -192,6 +192,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         makeToast("onResume()");
         setValueToView();
+        setVisibilityWindTextView(visibilityWindTextView);
+        setVisibilityPressureTextView(visibilityPressureTextView);
     }
 
     @Override
@@ -202,6 +204,9 @@ public class MainActivity extends AppCompatActivity {
         saveInstanceState.putInt(CHANCE_OF_RAIN_SAVE, chanceOfRainDefault);
         saveInstanceState.putInt(WIND_SAVE, windDefault);
         saveInstanceState.putInt(PRESSURE_SAVE, pressureDefault);
+        saveInstanceState.putString(CITY_SAVE, city);
+        saveInstanceState.putBoolean(VISAB_WIND_SAVE, visibilityWindTextView);
+        saveInstanceState.putBoolean(VISAB_PRESSURE_SAVE, visibilityPressureTextView);
         // Сохраняем
     }
 
@@ -213,5 +218,8 @@ public class MainActivity extends AppCompatActivity {
         chanceOfRainDefault = savedInstanceState.getInt(CHANCE_OF_RAIN_SAVE);
         windDefault = savedInstanceState.getInt(WIND_SAVE);
         pressureDefault = savedInstanceState.getInt(PRESSURE_SAVE);
+        city = savedInstanceState.getString(CITY_SAVE);
+        visibilityWindTextView = savedInstanceState.getBoolean(VISAB_WIND_SAVE);
+        visibilityPressureTextView = savedInstanceState.getBoolean(VISAB_PRESSURE_SAVE);
     }
 }
