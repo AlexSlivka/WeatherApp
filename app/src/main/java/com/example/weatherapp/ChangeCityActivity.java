@@ -33,7 +33,8 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
     public final static String WIND_CHECKBOX_DATA_KEY = "WINDDATAKEY";
     public final static String PRESSURE_CHECKBOX_DATA_KEY = "PRESSUREDATAKEY";
 
-    Pattern checkCityEnterEditText = Pattern.compile("^[A-Z][a-z]{2,}$");
+    Pattern checkCityEnterEditText = Pattern.compile("^[A-Z][a-z]{2,}\\s*[A-Z]*[a-z]*$");
+    //Pattern checkCityEnterEditText = Pattern.compile("^[A-Z][a-z]{2,}$");
 
 
     @Override
@@ -121,6 +122,7 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
                     cityDataIntent.putExtra(CITY_DATA_KEY, cityChange);
                     cityDataIntent.putExtra(WIND_CHECKBOX_DATA_KEY, windSpeedChBox.isChecked());
                     cityDataIntent.putExtra(PRESSURE_CHECKBOX_DATA_KEY, pressureChBox.isChecked());
+                    setResult(RESULT_OK, cityDataIntent);
                     Snackbar.make(cityEnterEditText, "City changed", Snackbar.LENGTH_LONG)
                             .show();
                     finish();

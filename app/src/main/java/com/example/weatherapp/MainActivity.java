@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private String city = "CITY";
     private TextView cityTextView;
     private TextView tempNow;
-    private TextView precipitationNow;
     private TextView dateNow;
     private TextView tempAtDayOfToday;
     private TextView tempAtNightOfToday;
@@ -100,10 +99,12 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == requestCodeChangeCityActivity) {
             if (resultCode == RESULT_OK && data != null) {
                 city = data.getStringExtra(ChangeCityActivity.CITY_DATA_KEY);
+                cityTextView.setText(city);
                 visibilityWindTextView = data.getBooleanExtra(ChangeCityActivity.WIND_CHECKBOX_DATA_KEY, false);
                 visibilityPressureTextView = data.getBooleanExtra(ChangeCityActivity.PRESSURE_CHECKBOX_DATA_KEY, false);
                 setVisibilityWindTextView(visibilityWindTextView);
                 setVisibilityPressureTextView(visibilityPressureTextView);
+                makeToast("city changed on " + city);
                 makeToast("visibilityWindTextView is " + visibilityWindTextView);
                 makeToast("visibilityPressureTextView is " + visibilityPressureTextView);
             }
@@ -159,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         cityTextView = findViewById(R.id.city_textView);
         tempNow = findViewById(R.id.temp_now_textView);
-        precipitationNow = findViewById(R.id.precipitation_now_textView);
         dateNow = findViewById(R.id.date_now_textView);
         tempAtDayOfToday = findViewById(R.id.temp_at_day_today_value);
         tempAtNightOfToday = findViewById(R.id.temp_at_night_today_value);

@@ -9,7 +9,12 @@
     </style>
 
     <style name="HeadersStartEnd">
-       <item name="android:textColor">@color/colorHeaders</item>
+        <item name="android:textColor">@color/colorHeaders</item>
+    </style>
+
+    <style name="ButtonStartEnd">
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
     </style>
 
 </resources>
