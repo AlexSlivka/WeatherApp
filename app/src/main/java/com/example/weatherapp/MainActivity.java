@@ -259,13 +259,13 @@ public class MainActivity extends AppCompatActivity {
                         urlConnection.setRequestMethod("GET"); // установка метода получения данных -GET
                         urlConnection.setReadTimeout(10000); // установка таймаута - 10 000 миллисекунд
                         BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); // читаем  данные в поток
-                       // String result = getLines(in);
                         StringBuilder result = new StringBuilder(1024);
                         String tempVariable;
                         while ((tempVariable = in.readLine()) != null) {
                             result.append(tempVariable).append("\n");
                         }
                         String resultStr = result.toString();
+                        //это попытка сделать оповешени от ошибке при обновлении (не удачная)
                         if (resultStr.trim().isEmpty()){
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
