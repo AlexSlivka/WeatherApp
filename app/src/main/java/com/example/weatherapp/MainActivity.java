@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String TAG = "WEATHER";
-    private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?lat=55.75&lon=37.62&units=metric&appid=";
+    private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&appid=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         setUpdateClickListener();
         setHistoryClickListener();
         changeCityClickListener();
-        //updateWeatherDataFromServer();
+        updateWeatherDataFromServer();
         if (savedInstanceState == null) {
             makeToast("Первый запуск - onCreate()");
         } else {
@@ -245,9 +246,10 @@ public class MainActivity extends AppCompatActivity {
         visibilityPressureTextView = savedInstanceState.getBoolean(VISAB_PRESSURE_SAVE);
     }
 
-    private void updateWeatherDataFromServer() {
+     private void updateWeatherDataFromServer() {
         try {
-            final URL uri = new URL(WEATHER_URL + "f52310dbfdea19138786c8eae8eb6138");
+            final String weather_city = String.format(WEATHER_URL,city);
+            final URL uri = new URL(weather_city + "f52310dbfdea19138786c8eae8eb6138");
             final Handler handler = new Handler(); // Запоминаем основной поток
             new Thread(new Runnable() {
                 public void run() {
@@ -260,16 +262,23 @@ public class MainActivity extends AppCompatActivity {
                        // String result = getLines(in);
                         StringBuilder result = new StringBuilder(1024);
                         String tempVariable;
-
                         while ((tempVariable = in.readLine()) != null) {
                             result.append(tempVariable).append("\n");
                         }
-
+                        String resultStr = result.toString();
+                        if (resultStr.trim().isEmpty()){
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    makeToast("Обновление данных не удалось");
+                                }
+                            });
+                        }
                         in.close();
 
                         // преобразование данных запроса в модель
                         Gson gson = new Gson();
-                        final WeatherRequest weatherRequest = gson.fromJson(result.toString(), WeatherRequest.class);
+                        final WeatherRequest weatherRequest = gson.fromJson(resultStr, WeatherRequest.class);
                         // Возвращаемся к основному потоку
                         handler.post(new Runnable() {
                             @Override
@@ -295,15 +304,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void displayWeather(WeatherRequest weatherRequest){
-      //  city= weatherRequest.getName();
         tempNowValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp());
         tempAtDayOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_max());
         tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_min());
-
         windTodayValue = String.format(Locale.getDefault(),"%d", weatherRequest.getWind().getSpeed());
         pressureTodayValue = String.format(Locale.getDefault(),"%d", weatherRequest.getMain().getPressure());
         setValueToView();
-
     }
 
 }
