@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                             result.append(tempVariable).append("\n");
                         }
                         String resultStr = result.toString();
-                        //это попытка сделать оповешени от ошибке при обновлении (не удачная)
+                        //это попытка сделать оповешение об ошибке при обновлении (не удачная)
                         if (resultStr.trim().isEmpty()){
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
