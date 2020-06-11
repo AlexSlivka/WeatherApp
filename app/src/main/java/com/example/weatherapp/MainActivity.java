@@ -7,20 +7,31 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.weatherapp.model.WeatherRequest;
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String city = "CITY";
+    private String city = "Moscow";
     private TextView cityTextView;
     private TextView tempNow;
     private TextView dateNow;
@@ -44,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
 
     Date currentDate = new Date();
 
+    private String tempNowValue = "1";
+    private String tempAtDayOfTodayValue = "2";
+    private String tempAtNightOfTodayValue = "0";
+    private String windTodayValue = "0";
+    private String pressureTodayValue= "0";
+
     private int tempDefault = 0;
     private int chanceOfRainDefault = 0;
     private int windDefault = 0;
@@ -59,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String PRESSURE_SAVE = "PRESSURE";
     private int requestCodeChangeCityActivity = 100;
 
+
+    private static final String TAG = "WEATHER";
+    private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?lat=55.75&lon=37.62&units=metric&appid=";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         setUpdateClickListener();
         setHistoryClickListener();
         changeCityClickListener();
+        //updateWeatherDataFromServer();
         if (savedInstanceState == null) {
             makeToast("Первый запуск - onCreate()");
         } else {
@@ -146,12 +168,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void setValueToView() {
         cityTextView.setText(city);
-        tempNow.setText(getString(R.string.temp_celsius, tempDefault + 10));
-        tempAtDayOfToday.setText(getString(R.string.temp_celsius, tempDefault + 12));
-        tempAtNightOfToday.setText(getString(R.string.temp_celsius, tempDefault + 3));
+        tempNow.setText(getString(R.string.temp_celsius_string, tempNowValue));
+        tempAtDayOfToday.setText(getString(R.string.temp_celsius_string, tempAtDayOfTodayValue));
+        tempAtNightOfToday.setText(getString(R.string.temp_celsius_string, tempAtNightOfTodayValue));
         chanceOfRainToday.setText(getString(R.string.chance_of_rain_template, chanceOfRainDefault + 6));
-        windToday.setText(getString(R.string.wind_template, windDefault + 2));
-        pressureToday.setText(getString(R.string.pressure_template, pressureDefault + 2));
+        windToday.setText(getString(R.string.wind_template_string, windTodayValue));
+        pressureToday.setText(getString(R.string.pressure_template_string, pressureTodayValue));
         tempAtDayOfTomorrow.setText(getString(R.string.temp_celsius, tempDefault + 8));
         tempAtNightOfTomorrow.setText(getString(R.string.temp_celsius, tempDefault + 1));
         chanceOfRainTomorrow.setText(getString(R.string.chance_of_rain_template, chanceOfRainDefault + 56));
@@ -222,4 +244,61 @@ public class MainActivity extends AppCompatActivity {
         visibilityWindTextView = savedInstanceState.getBoolean(VISAB_WIND_SAVE);
         visibilityPressureTextView = savedInstanceState.getBoolean(VISAB_PRESSURE_SAVE);
     }
+
+    private void updateWeatherDataFromServer() {
+        try {
+            final URL uri = new URL(WEATHER_URL + "f52310dbfdea19138786c8eae8eb6138");
+            final Handler handler = new Handler(); // Запоминаем основной поток
+            new Thread(new Runnable() {
+                public void run() {
+                    HttpsURLConnection urlConnection = null;
+                    try {
+                        urlConnection = (HttpsURLConnection) uri.openConnection();
+                        urlConnection.setRequestMethod("GET"); // установка метода получения данных -GET
+                        urlConnection.setReadTimeout(10000); // установка таймаута - 10 000 миллисекунд
+                        BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); // читаем  данные в поток
+                        String result = getLines(in);
+                        // преобразование данных запроса в модель
+                        Gson gson = new Gson();
+                        final WeatherRequest weatherRequest = gson.fromJson(result, WeatherRequest.class);
+                        // Возвращаемся к основному потоку
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayWeather(weatherRequest);
+                            }
+                        });
+                    } catch (Exception e) {
+                        Log.e(TAG, "Fail connection", e);
+                        e.printStackTrace();
+                    } finally {
+                        if (null != urlConnection) {
+                            urlConnection.disconnect();
+                        }
+                    }
+                }
+            }).start();
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Fail URI", e);
+            e.printStackTrace();
+        }
+    }
+
+    private String getLines(BufferedReader in) {
+        return in.lines().collect(Collectors.joining("\n"));
+    }
+
+    private void displayWeather(WeatherRequest weatherRequest){
+        city= weatherRequest.getName();
+        cityTextView.setText(city);
+        String temperatureValue = String.format(Locale.getDefault(), "%.2f", weatherRequest.getMain().getTemp());
+        //temperature.setText(temperatureValue);
+
+        String pressureText = String.format(Locale.getDefault(),"%d", weatherRequest.getMain().getPressure());
+       // pressure.setText(pressureText);
+
+       // humidity.setText(String.format("%d", weatherRequest.getMain().getHumidity()));
+      //  windSpeed.setText(String.format("%d", weatherRequest.getWind().getSpeed()));
+    }
+
 }

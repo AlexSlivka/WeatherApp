@@ -13,9 +13,13 @@
     <string name="update_text">UPDATE</string>
     <string name="change_city_text">CHANGE CITY</string>
     <string name="temp_celsius">%d "\u2103"</string>
+    <string name="temp_celsius_string">%s "\u2103"</string>
     <string name="chance_of_rain_template">%d %%</string>
+    <string name="chance_of_rain_template_string">%s %%</string>
     <string name="wind_template">%d m "/" s</string>
+    <string name="wind_template_string">%s m "/" s</string>
     <string name="pressure_template">%d mm</string>
+    <string name="pressure_template_string">%s mm</string>
     <string name="pressure_text">pressure</string>
     <string name="confirm_selection">confirm selection</string>
     <string name="additional_settings">additional settings</string>
