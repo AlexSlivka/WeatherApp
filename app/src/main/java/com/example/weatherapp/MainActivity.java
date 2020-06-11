@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 chanceOfRainDefault += 1;
                 windDefault += 2;
                 pressureDefault += 15;
-                setValueToView();
+                updateWeatherDataFromServer();
             }
         });
     }
@@ -257,10 +257,19 @@ public class MainActivity extends AppCompatActivity {
                         urlConnection.setRequestMethod("GET"); // установка метода получения данных -GET
                         urlConnection.setReadTimeout(10000); // установка таймаута - 10 000 миллисекунд
                         BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); // читаем  данные в поток
-                        String result = getLines(in);
+                       // String result = getLines(in);
+                        StringBuilder result = new StringBuilder(1024);
+                        String tempVariable;
+
+                        while ((tempVariable = in.readLine()) != null) {
+                            result.append(tempVariable).append("\n");
+                        }
+
+                        in.close();
+
                         // преобразование данных запроса в модель
                         Gson gson = new Gson();
-                        final WeatherRequest weatherRequest = gson.fromJson(result, WeatherRequest.class);
+                        final WeatherRequest weatherRequest = gson.fromJson(result.toString(), WeatherRequest.class);
                         // Возвращаемся к основному потоку
                         handler.post(new Runnable() {
                             @Override
@@ -284,21 +293,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getLines(BufferedReader in) {
-        return in.lines().collect(Collectors.joining("\n"));
-    }
 
     private void displayWeather(WeatherRequest weatherRequest){
-        city= weatherRequest.getName();
-        cityTextView.setText(city);
-        String temperatureValue = String.format(Locale.getDefault(), "%.2f", weatherRequest.getMain().getTemp());
-        //temperature.setText(temperatureValue);
+      //  city= weatherRequest.getName();
+        tempNowValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp());
+        tempAtDayOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_max());
+        tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_min());
 
-        String pressureText = String.format(Locale.getDefault(),"%d", weatherRequest.getMain().getPressure());
-       // pressure.setText(pressureText);
+        windTodayValue = String.format(Locale.getDefault(),"%d", weatherRequest.getWind().getSpeed());
+        pressureTodayValue = String.format(Locale.getDefault(),"%d", weatherRequest.getMain().getPressure());
+        setValueToView();
 
-       // humidity.setText(String.format("%d", weatherRequest.getMain().getHumidity()));
-      //  windSpeed.setText(String.format("%d", weatherRequest.getWind().getSpeed()));
     }
 
 }
