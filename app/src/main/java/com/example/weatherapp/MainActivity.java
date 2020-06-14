@@ -24,13 +24,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Constants {
 
     private String city = "Moscow";
     private TextView cityTextView;
@@ -60,7 +62,10 @@ public class MainActivity extends AppCompatActivity {
     private String tempAtDayOfTodayValue = "2";
     private String tempAtNightOfTodayValue = "0";
     private String windTodayValue = "0";
-    private String pressureTodayValue= "0";
+    private String pressureTodayValue = "0";
+
+    private ArrayList<String> dataHistoryWeather
+            = new ArrayList<>(Arrays.asList("Base item"));
 
     private int tempDefault = 0;
     private int chanceOfRainDefault = 0;
@@ -104,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intentHistory = new Intent(MainActivity.this, HistoryActivity.class);
+                intentHistory.putStringArrayListExtra(DATA_HISTORY_LIST,dataHistoryWeather);
                 startActivity(intentHistory);
             }
         });
@@ -126,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 String cityFromChangeCityActivity = data.getStringExtra(ChangeCityActivity.CITY_DATA_KEY);
                 try {
-                    if (!cityFromChangeCityActivity.equals(city)){
+                    if (!cityFromChangeCityActivity.equals(city)) {
                         city = cityFromChangeCityActivity;
                         updateWeatherDataFromServer();
                     }
@@ -253,9 +259,9 @@ public class MainActivity extends AppCompatActivity {
         visibilityPressureTextView = savedInstanceState.getBoolean(VISAB_PRESSURE_SAVE);
     }
 
-     private void updateWeatherDataFromServer() {
+    private void updateWeatherDataFromServer() {
         try {
-            final String weather_city = String.format(WEATHER_URL,city);
+            final String weather_city = String.format(WEATHER_URL, city);
             final URL uri = new URL(weather_city + "f52310dbfdea19138786c8eae8eb6138");
             final Handler handler = new Handler(); // Запоминаем основной поток
             new Thread(new Runnable() {
@@ -266,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                         urlConnection.setRequestMethod("GET"); // установка метода получения данных -GET
                         urlConnection.setReadTimeout(10000); // установка таймаута - 10 000 миллисекунд
                         BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); // читаем  данные в поток
-                       // String result = getLines(in);
+                        // String result = getLines(in);
                         StringBuilder result = new StringBuilder(1024);
                         String tempVariable;
                         while ((tempVariable = in.readLine()) != null) {
@@ -302,12 +308,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void displayWeather(WeatherRequest weatherRequest){
-        tempNowValue = String.format(Locale.getDefault(), "%.0f", weatherRequest.getMain().getTemp());
+    private void displayWeather(WeatherRequest weatherRequest) {
+        String tempNowValueForList = String.format(Locale.getDefault(), "%.0f", weatherRequest.getMain().getTemp());
+       if (!tempNowValueForList.equals(tempNowValue)) {
+            String dataForList = getString(R.string.history_data_list, city, tempNowValueForList);
+            makeToast(dataForList);
+            dataHistoryWeather.add(dataForList);
+       }
+        tempNowValue = tempNowValueForList;
         tempAtDayOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_max());
         tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_min());
-        windTodayValue = String.format(Locale.getDefault(),"%d", weatherRequest.getWind().getSpeed());
-        pressureTodayValue = String.format(Locale.getDefault(),"%d", weatherRequest.getMain().getPressure());
+        windTodayValue = String.format(Locale.getDefault(), "%d", weatherRequest.getWind().getSpeed());
+        pressureTodayValue = String.format(Locale.getDefault(), "%d", weatherRequest.getMain().getPressure());
         setValueToView();
     }
 

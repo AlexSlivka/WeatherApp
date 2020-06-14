@@ -25,4 +25,6 @@
     <string name="additional_settings">additional settings</string>
     <string name="select_city">select city</string>
     <string name="history_button_text">HISTORY</string>
+    <string name="history_data_list">In %s temperature is %s "\u2103"</string>
+
 </resources>

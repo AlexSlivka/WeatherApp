@@ -11,10 +11,10 @@
     <string-array name="cities_array">
         <item>Moscow</item>
         <item>Saint Petersburg</item>
-        <item>Berlin</item>
-        <item>London</item>
-        <item>Paris</item>
-        <item>Rome</item>
+        <item>Kazan</item>
+        <item>Krasnodar</item>
+        <item>Tomsk</item>
+        <item>Novosibirsk</item>
     </string-array>
 
 </resources>
