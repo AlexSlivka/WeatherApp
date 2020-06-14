@@ -12,14 +12,15 @@
     <string name="wind_text">скорость ветра</string>
     <string name="tomorrow_text">Завтра</string>
     <string name="update_text">ОБНОВИТЬ</string>
-    <string name="change_city_text">ИЗМЕНИТЬ ГОРОД</string>
+    <string name="change_city_text">НАСТРОЙКИ</string>
     <string name="temp_celsius">%d "\u2103"</string>
     <string name="chance_of_rain_template">%d %%</string>
     <string name="wind_template">%d м "/" с</string>
     <string name="pressure_text">давление</string>
     <string name="pressure_template">%d мм</string>
-    <string name="confirm_selection">подтвердить выбор</string>
-    <string name="additional_settings">дполнительные настройки</string>
+    <string name="pressure_template_string">%s мм</string>
+    <string name="confirm_selection">подтвердить</string>
+    <string name="additional_settings">доп.настройки</string>
     <string name="select_city">выбрать город</string>
     <string name="history_button_text">ИСТОРИЯ</string>
 </resources>

@@ -124,8 +124,15 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == requestCodeChangeCityActivity) {
             if (resultCode == RESULT_OK && data != null) {
-                city = data.getStringExtra(ChangeCityActivity.CITY_DATA_KEY);
-                cityTextView.setText(city);
+                String cityFromChangeCityActivity = data.getStringExtra(ChangeCityActivity.CITY_DATA_KEY);
+                try {
+                    if (!cityFromChangeCityActivity.equals(city)){
+                        city = cityFromChangeCityActivity;
+                        updateWeatherDataFromServer();
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
                 visibilityWindTextView = data.getBooleanExtra(ChangeCityActivity.WIND_CHECKBOX_DATA_KEY, false);
                 visibilityPressureTextView = data.getBooleanExtra(ChangeCityActivity.PRESSURE_CHECKBOX_DATA_KEY, false);
                 setVisibilityWindTextView(visibilityWindTextView);
@@ -266,14 +273,6 @@ public class MainActivity extends AppCompatActivity {
                             result.append(tempVariable).append("\n");
                         }
                         String resultStr = result.toString();
-                        if (resultStr.trim().isEmpty()){
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    makeToast("Обновление данных не удалось");
-                                }
-                            });
-                        }
                         in.close();
 
                         // преобразование данных запроса в модель
@@ -304,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void displayWeather(WeatherRequest weatherRequest){
-        tempNowValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp());
+        tempNowValue = String.format(Locale.getDefault(), "%.0f", weatherRequest.getMain().getTemp());
         tempAtDayOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_max());
         tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_min());
         windTodayValue = String.format(Locale.getDefault(),"%d", weatherRequest.getWind().getSpeed());

@@ -261,9 +261,9 @@
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:text="@string/history_button_text" />
 
@@ -273,9 +273,9 @@
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:text="@string/change_city_text" />
 
@@ -283,9 +283,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/update_button"
-        android:layout_width="wrap_content"
+        android:layout_width="245dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
+        android:layout_marginStart="4dp"
         android:layout_weight="1"
         android:text="@string/update_text"
         app:layout_constraintBottom_toBottomOf="parent"
