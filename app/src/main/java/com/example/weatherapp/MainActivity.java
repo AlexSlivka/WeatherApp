@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
             @Override
             public void onClick(View v) {
                 Intent intentHistory = new Intent(MainActivity.this, HistoryActivity.class);
-                intentHistory.putStringArrayListExtra(DATA_HISTORY_LIST,dataHistoryWeather);
+                intentHistory.putStringArrayListExtra(DATA_HISTORY_LIST, dataHistoryWeather);
                 startActivity(intentHistory);
             }
         });
@@ -310,11 +310,10 @@ public class MainActivity extends AppCompatActivity implements Constants {
 
     private void displayWeather(WeatherRequest weatherRequest) {
         String tempNowValueForList = String.format(Locale.getDefault(), "%.0f", weatherRequest.getMain().getTemp());
-       if (!tempNowValueForList.equals(tempNowValue)) {
+        if (!tempNowValueForList.equals(tempNowValue)) {
             String dataForList = getString(R.string.history_data_list, city, tempNowValueForList);
-            makeToast(dataForList);
             dataHistoryWeather.add(dataForList);
-       }
+        }
         tempNowValue = tempNowValueForList;
         tempAtDayOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_max());
         tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_min());
