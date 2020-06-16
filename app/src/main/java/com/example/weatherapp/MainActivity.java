@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
     private static final String PRESSURE_SAVE = "PRESSURE";
     private int requestCodeChangeCityActivity = 100;
 
+    //ветка для переделка на фрагменты с боковым меню
 
     private static final String TAG = "WEATHER";
     private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&appid=";
