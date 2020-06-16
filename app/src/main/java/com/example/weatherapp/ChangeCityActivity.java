@@ -146,3 +146,4 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
         cityEnterEditText.setText(itemText);
     }
 }
+//for lesson06
