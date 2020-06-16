@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
     public static final String WIND_SAVE = "WIND";
     private static final String PRESSURE_SAVE = "PRESSURE";
     private int requestCodeChangeCityActivity = 100;
+//for lesson07
 
 
     private static final String TAG = "WEATHER";
