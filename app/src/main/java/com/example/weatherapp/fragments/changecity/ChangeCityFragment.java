@@ -1,25 +1,129 @@
-package com.example.weatherapp;
-
-import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.example.weatherapp.fragments.changecity;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.weatherapp.EventBus;
+import com.example.weatherapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.regex.Pattern;
 
-public class ChangeCityActivity extends AppCompatActivity implements OnItemCitiesClick {
+public class ChangeCityFragment extends Fragment implements OnItemCitiesClick {
     private String cityChange = " ";
+    private TextInputEditText cityEnterEditText;
+    private CheckBox windSpeedChBox;
+    private CheckBox pressureChBox;
+    private Button cancelBtn;
+    private Button confirmSelectionBtn;
+
+    private RecyclerView recyclerViewCities;
+    private String[] listDataCities;
+
+    Pattern checkCityEnterEditText = Pattern.compile("^[A-Z][a-z]{2,}\\s*[A-Z]*[a-z]*$");
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_change_city, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setRetainInstance(true);
+        initViewsChangeCityActivity(view);
+        setupRecyclerViewCities();
+        // setClickListenerConfirmSelectionBtn();
+        //  setClickListenerCancelBtn();
+        checkCityEnterEditTextField();
+
+    }
+
+    private void initViewsChangeCityActivity(@NonNull View view) {
+        cityEnterEditText = view.findViewById(R.id.enter_city_editText);
+        windSpeedChBox = view.findViewById(R.id.wind_speed_checkBox);
+        pressureChBox = view.findViewById(R.id.pressure_checkBox);
+        cancelBtn = view.findViewById(R.id.cancel_button);
+        confirmSelectionBtn = view.findViewById(R.id.confirm_selection_button);
+        recyclerViewCities = view.findViewById(R.id.recycler_view_history);
+
+    }
+
+    private void setupRecyclerViewCities() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());//????
+        listDataCities = getResources().getStringArray(R.array.cities_array);
+        RecyclerDataAdapterCities adapterCities = new RecyclerDataAdapterCities(listDataCities, this);
+        recyclerViewCities.setLayoutManager(layoutManager);
+        recyclerViewCities.setAdapter(adapterCities);
+    }
+
+    private void checkCityEnterEditTextField() {
+        // Проверка ввода названия города при потере фокуса
+        cityEnterEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) return;
+                TextView tv = (TextView) v;
+                validate(tv, checkCityEnterEditText, "Invalid city name");
+            }
+        });
+    }
+
+    // Валидация
+    private void validate(TextView tv, Pattern check, String message) {
+        String value = tv.getText().toString();
+        if (check.matcher(value).matches()) {    // Проверим на основе регулярных выражений
+            hideError(tv);
+        } else {
+            showError(tv, message);
+        }
+    }
+
+
+    // Показать ошибку
+    private void showError(TextView view, String message) {
+        view.setError(message);
+    }
+
+    // спрятать ошибку
+    private void hideError(TextView view) {
+        view.setError(null);
+    }
+
+    @Override
+    public void onItemCitiesClicked(String itemText) {
+        Toast.makeText(getContext(), itemText, Toast.LENGTH_SHORT).show();
+        cityEnterEditText.setText(itemText);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getBus().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getBus().unregister(this);
+        super.onStop();
+    }
+
+}
+/*
+private String cityChange = " ";
     private TextInputEditText cityEnterEditText;
     private CheckBox windSpeedChBox;
     private CheckBox pressureChBox;
@@ -146,3 +250,4 @@ public class ChangeCityActivity extends AppCompatActivity implements OnItemCitie
         cityEnterEditText.setText(itemText);
     }
 }
+ */

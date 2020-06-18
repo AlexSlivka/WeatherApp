@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.fragments.history;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.weatherapp.R;
 
 public class RecyclerDataAdapterHistory extends RecyclerView.Adapter<RecyclerDataAdapterHistory.ViewHolder> {
     private String[] data;
