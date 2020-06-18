@@ -210,7 +210,7 @@ public class HomeFragment extends Fragment implements Constants {
     private void displayWeather(WeatherRequest weatherRequest) {
         String tempNowValueForList = String.format(Locale.getDefault(), "%.0f", weatherRequest.getMain().getTemp());
         recordHistory(tempNowValueForList);
-        sendHistoryFromHome();
+        sendHistoryFromHome();//здесь происходит отсылка в History
         tempAtDayOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_max());
         tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_min());
         windTodayValue = String.format(Locale.getDefault(), "%d", weatherRequest.getWind().getSpeed());
