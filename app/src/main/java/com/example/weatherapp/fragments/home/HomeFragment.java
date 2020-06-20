@@ -31,7 +31,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -63,6 +66,7 @@ public class HomeFragment extends Fragment implements Constants {
     Date currentDate = new Date();
 
     SharedPreferences sPref;
+    SharedPreferences sPrefHistory;
 
 
     private String tempNowValue = "1";
@@ -71,7 +75,8 @@ public class HomeFragment extends Fragment implements Constants {
     private String windTodayValue = "0";
     private String pressureTodayValue = "0";
 
-    private ArrayList<String> dataHistoryWeather = new ArrayList<>(Arrays.asList("Base item"));
+ // private ArrayList<String> dataHistoryWeather = new ArrayList<>(Arrays.asList("Base item"));
+    private Set<String> dataHistoryWeathers;
 
     private int tempDefault = 0;
     private int chanceOfRainDefault = 0;
@@ -100,11 +105,13 @@ public class HomeFragment extends Fragment implements Constants {
         setDate();
         setValueToView();
         setUpdateClickListener();
-        // setHistoryClickListener();
+        setHistoryClickListener();
         // changeCityClickListener();
+        dataHistoryWeathers = new LinkedHashSet<>();
+        makeToast("LinkedHashSet");
         updateWeatherDataFromServer();
-
     }
+
 
     private void initViews(@NonNull View view) {
         cityTextView = view.findViewById(R.id.city_textView);
@@ -226,14 +233,23 @@ public class HomeFragment extends Fragment implements Constants {
 
     private void recordHistory(String tempNowValueForList) {
         String dataForList = getString(R.string.history_data_list, city, tempNowValueForList);
-        dataHistoryWeather.add(dataForList);
+        dataHistoryWeathers.add("Base");
+        dataHistoryWeathers.add(dataForList);
         makeToast("Record");
         tempNowValue = tempNowValueForList;
     }
 
     private void sendHistoryFromHome() {
-        EventBus.getBus().post(new SendHistoryEvent(dataHistoryWeather));
-        makeToast("Send EventBus");
+        sPrefHistory = getContext().getSharedPreferences("History", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPrefHistory.edit();
+        ed.putStringSet(HISTORY_DATA_KEY, dataHistoryWeathers);
+        ed.commit();
+        makeToast("Send History");
+    }
+
+    void loadHistoryFromPreferencesAfterStop() {
+        sPrefHistory = getContext().getSharedPreferences("History", MODE_PRIVATE);
+        dataHistoryWeathers = sPrefHistory.getStringSet(HISTORY_DATA_KEY, new HashSet<String>());
     }
 
     private void setVisibilityPressureTextView(boolean visibilityPressureTextView) {
@@ -261,13 +277,14 @@ public class HomeFragment extends Fragment implements Constants {
         super.onStart();
         EventBus.getBus().register(this);
         loadCityFromPreferences();
+        loadHistoryFromPreferencesAfterStop();
         setVisibilityWindTextView(visibilityWindTextView);
         setVisibilityPressureTextView(visibilityPressureTextView);
     }
 
     @Override
     public void onStop() {
-        EventBus.getBus().unregister(this);
+        sendHistoryFromHome();
         super.onStop();
     }
 
@@ -282,6 +299,17 @@ public class HomeFragment extends Fragment implements Constants {
         visibilityPressureTextView = sPref.getBoolean(PRESSURE_CHECKBOX_DATA_KEY, false);
         Toast.makeText(getContext(), "Получено название города", Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void setHistoryClickListener() {
+        historyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (String h:dataHistoryWeathers) {
+                    makeToast(h);
+                }
+            }
+        });
     }
 }
 

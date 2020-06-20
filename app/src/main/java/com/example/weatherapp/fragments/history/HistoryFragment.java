@@ -20,12 +20,16 @@ import com.example.weatherapp.events.SendHistoryEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class HistoryFragment extends Fragment implements Constants {
     private RecyclerView recyclerViewHistory;
     private String[] listData;
+
+    SharedPreferences sPrefHistory;
 
 
     @Nullable
@@ -39,6 +43,7 @@ public class HistoryFragment extends Fragment implements Constants {
         super.onViewCreated(view, savedInstanceState);
         setRetainInstance(true);
         initViewHistory(view);
+        loadHistoryFromPreferences();
        // listData = getResources().getStringArray(R.array.history_days_array);
         //оставил пока не заработает передача данных от HomeFragment
         setupRecyclerViewHistory();
@@ -58,6 +63,7 @@ public class HistoryFragment extends Fragment implements Constants {
    @Override
     public void onStart() {
         super.onStart();
+        loadHistoryFromPreferences();
         EventBus.getBus().register(this);
        Toast.makeText(getContext(), "ON START", Toast.LENGTH_SHORT).show();
 
@@ -70,14 +76,11 @@ public class HistoryFragment extends Fragment implements Constants {
         super.onStop();
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void getHistoryListFromHome(SendHistoryEvent event){
-        Toast.makeText(getContext(), "Получение истории", Toast.LENGTH_SHORT).show();
-        ArrayList<String> listDataFromMain = event.getDataHistoryWeatherEvents();
-        listData = new String[listDataFromMain.size()];
-        listDataFromMain.toArray(listData);
-        setupRecyclerViewHistory();
+    void loadHistoryFromPreferences() {
+        sPrefHistory = getContext().getSharedPreferences("History", MODE_PRIVATE);
+        Set<String> ret = sPrefHistory.getStringSet(HISTORY_DATA_KEY, new HashSet<String>());
+        listData = ret.toArray(new String[ret.size()]);
+        Toast.makeText(getContext(), "Получена история", Toast.LENGTH_SHORT).show();
     }
 
 
