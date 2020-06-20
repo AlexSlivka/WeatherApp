@@ -31,11 +31,10 @@ public class HistoryFragment extends Fragment implements Constants {
 
     SharedPreferences sPrefHistory;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_history,container,false);
+        return inflater.inflate(R.layout.fragment_history, container, false);
     }
 
     @Override
@@ -44,8 +43,6 @@ public class HistoryFragment extends Fragment implements Constants {
         setRetainInstance(true);
         initViewHistory(view);
         loadHistoryFromPreferences();
-       // listData = getResources().getStringArray(R.array.history_days_array);
-        //оставил пока не заработает передача данных от HomeFragment
         setupRecyclerViewHistory();
     }
 
@@ -54,60 +51,23 @@ public class HistoryFragment extends Fragment implements Constants {
     }
 
     private void setupRecyclerViewHistory() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());//?????
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecyclerDataAdapterHistory adapterHistory = new RecyclerDataAdapterHistory(listData);
         recyclerViewHistory.setLayoutManager(layoutManager);
         recyclerViewHistory.setAdapter(adapterHistory);
     }
 
-   @Override
+    @Override
     public void onStart() {
         super.onStart();
         loadHistoryFromPreferences();
-        EventBus.getBus().register(this);
-       Toast.makeText(getContext(), "ON START", Toast.LENGTH_SHORT).show();
-
-   }
-
-    @Override
-    public void onStop() {
-        EventBus.getBus().unregister(this);
-        Toast.makeText(getContext(), "ON STOP", Toast.LENGTH_SHORT).show();
-        super.onStop();
     }
 
     void loadHistoryFromPreferences() {
         sPrefHistory = getContext().getSharedPreferences("History", MODE_PRIVATE);
         Set<String> ret = sPrefHistory.getStringSet(HISTORY_DATA_KEY, new HashSet<String>());
         listData = ret.toArray(new String[ret.size()]);
-        Toast.makeText(getContext(), "Получена история", Toast.LENGTH_SHORT).show();
     }
-
 
 }
 
-  /*  private RecyclerView recyclerViewHistory;
-    private String[] listData;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
-        initViewHistory();
-        ArrayList<String> listDataFromMain = getIntent().getStringArrayListExtra(DATA_HISTORY_LIST);
-        listData = new String[listDataFromMain.size()];
-        listDataFromMain.toArray(listData);
-        setupRecyclerViewHistory();
-    }
-
-    private void setupRecyclerViewHistory() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
-        RecyclerDataAdapterHistory adapterHistory = new RecyclerDataAdapterHistory(listData);
-        recyclerViewHistory.setLayoutManager(layoutManager);
-        recyclerViewHistory.setAdapter(adapterHistory);
-    }
-
-    private void initViewHistory() {
-        recyclerViewHistory = findViewById(R.id.recycler_view_history);
-    }
-*/
