@@ -1,5 +1,6 @@
 package com.example.weatherapp.fragments.home;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -34,6 +35,8 @@ import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class HomeFragment extends Fragment implements Constants {
     private String city = "Moscow";
     private TextView cityTextView;
@@ -58,6 +61,9 @@ public class HomeFragment extends Fragment implements Constants {
     private boolean visibilityPressureTextView = false;
 
     Date currentDate = new Date();
+
+    SharedPreferences sPref;
+
 
     private String tempNowValue = "1";
     private String tempAtDayOfTodayValue = "2";
@@ -254,6 +260,9 @@ public class HomeFragment extends Fragment implements Constants {
     public void onStart() {
         super.onStart();
         EventBus.getBus().register(this);
+        loadCityFromPreferences();
+        setVisibilityWindTextView(visibilityWindTextView);
+        setVisibilityPressureTextView(visibilityPressureTextView);
     }
 
     @Override
@@ -262,7 +271,18 @@ public class HomeFragment extends Fragment implements Constants {
         super.onStop();
     }
 
+    void loadCityFromPreferences() {
+        sPref = getContext().getSharedPreferences("CityName", MODE_PRIVATE);
+        String savedText = sPref.getString(CITY_DATA_KEY, "");
+        if (!savedText.equals(city) || !savedText.equals("")) {
+            city = savedText;
+            updateWeatherDataFromServer();
+        }
+        visibilityWindTextView = sPref.getBoolean(WIND_CHECKBOX_DATA_KEY, false);
+        visibilityPressureTextView = sPref.getBoolean(PRESSURE_CHECKBOX_DATA_KEY, false);
+        Toast.makeText(getContext(), "Получено название города", Toast.LENGTH_SHORT).show();
 
+    }
 }
 
 

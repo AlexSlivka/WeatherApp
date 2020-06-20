@@ -1,5 +1,6 @@
 package com.example.weatherapp.fragments.history;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,12 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class HistoryFragment extends Fragment implements Constants {
     private RecyclerView recyclerViewHistory;
     private String[] listData;
+
 
     @Nullable
     @Override
@@ -75,6 +79,7 @@ public class HistoryFragment extends Fragment implements Constants {
         listDataFromMain.toArray(listData);
         setupRecyclerViewHistory();
     }
+
 
 }
 
