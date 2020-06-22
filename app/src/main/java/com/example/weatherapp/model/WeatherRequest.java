@@ -7,6 +7,15 @@ public class WeatherRequest {
     private Wind wind;
     private Clouds clouds;
     private String name;
+    private int cod;
+
+    public int getCod() {
+        return cod;
+    }
+
+    public void setCod(int cod) {
+        this.cod = cod;
+    }
 
     public Coord getCoord() {
         return coord;

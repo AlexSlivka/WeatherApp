@@ -1,5 +1,7 @@
 package com.example.weatherapp.fragments.changecity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -82,11 +84,33 @@ public class ChangeCityFragment extends Fragment implements OnItemCitiesClick, C
                     Snackbar.make(cityEnterEditText, "City changed", Snackbar.LENGTH_LONG)
                             .show();
                 } else {
-                    Snackbar.make(cityEnterEditText, "Check entered data", Snackbar.LENGTH_LONG)
-                            .show();
+                    alertDialogMessage("Check entered data");
                 }
             }
         });
+    }
+
+    private void alertDialogMessage(String message) {
+        // Создаем билдер и передаем контекст приложения
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // в билдере указываем заголовок окна (можно указывать как ресурс, так и строку)
+        builder.setTitle(R.string.exclamation)
+                // указываем сообщение в окне (также есть вариант со строковым параметром)
+                .setMessage(message)
+                // можно указать и пиктограмму
+                .setIcon(R.mipmap.ic_launcher_round)
+                // из этого окна нельзя выйти кнопкой back
+                .setCancelable(false)
+                // устанавливаем кнопку (название кнопки также можно задавать строкой)
+                .setPositiveButton(R.string.button,
+                        // Ставим слушатель, нажатие будем обрабатывать
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(getContext(), "Кнопка нажата", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     void saveCityToPreferences(String name) {

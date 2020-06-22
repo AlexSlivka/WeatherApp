@@ -1,5 +1,7 @@
 package com.example.weatherapp.fragments.home;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.example.weatherapp.Constants;
 import com.example.weatherapp.EventBus;
 import com.example.weatherapp.R;
-import com.example.weatherapp.events.SendHistoryEvent;
 import com.example.weatherapp.model.WeatherRequest;
 import com.google.gson.Gson;
 
@@ -26,12 +27,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -60,6 +56,9 @@ public class HomeFragment extends Fragment implements Constants {
 
     private boolean visibilityWindTextView = false;
     private boolean visibilityPressureTextView = false;
+    private boolean updatedDataFromServer = false;
+
+    private String updateBase;
 
     Date currentDate = new Date();
 
@@ -101,7 +100,6 @@ public class HomeFragment extends Fragment implements Constants {
         setValueToView();
         setUpdateClickListener();
         dataHistoryWeathers = new LinkedHashSet<>();
-        updateWeatherDataFromServer();
     }
 
 
@@ -179,6 +177,8 @@ public class HomeFragment extends Fragment implements Constants {
                             result.append(tempVariable).append("\n");
                         }
                         String resultStr = result.toString();
+                        //updatedDataFromServer = true;
+                        updateBase = resultStr;
                         in.close();
 
                         // преобразование данных запроса в модель
@@ -194,6 +194,13 @@ public class HomeFragment extends Fragment implements Constants {
                     } catch (Exception e) {
                         Log.e(TAG, "Fail connection", e);
                         e.printStackTrace();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                alertDialogMessageHome("Fail connection");
+                                cityTextView.setText(city);
+                            }
+                        });
                     } finally {
                         if (null != urlConnection) {
                             urlConnection.disconnect();
@@ -204,10 +211,13 @@ public class HomeFragment extends Fragment implements Constants {
         } catch (MalformedURLException e) {
             Log.e(TAG, "Fail URI", e);
             e.printStackTrace();
+            alertDialogMessageHome("Fail");
         }
     }
 
     private void displayWeather(WeatherRequest weatherRequest) {
+        String cityFromServer = weatherRequest.getName();
+        city = cityFromServer;
         String tempNowValueForList = String.format(Locale.getDefault(), "%.0f", weatherRequest.getMain().getTemp());
         recordHistory(tempNowValueForList);
         sendHistoryFromHome();
@@ -259,9 +269,9 @@ public class HomeFragment extends Fragment implements Constants {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getBus().register(this);
         loadCityFromPreferences();
         loadHistoryFromPreferencesAfterStop();
+        updateWeatherDataFromServer();
         setVisibilityWindTextView(visibilityWindTextView);
         setVisibilityPressureTextView(visibilityPressureTextView);
     }
@@ -275,14 +285,36 @@ public class HomeFragment extends Fragment implements Constants {
     void loadCityFromPreferences() {
         sPref = getContext().getSharedPreferences("CityName", MODE_PRIVATE);
         String savedText = sPref.getString(CITY_DATA_KEY, "");
-        if (!savedText.equals(city) || !savedText.equals("")) {
+        if (!savedText.equals(city)) {
             city = savedText;
             updateWeatherDataFromServer();
         }
         visibilityWindTextView = sPref.getBoolean(WIND_CHECKBOX_DATA_KEY, false);
         visibilityPressureTextView = sPref.getBoolean(PRESSURE_CHECKBOX_DATA_KEY, false);
         makeToast("Get new City name");
+    }
 
+    private void alertDialogMessageHome(String message) {
+        // Создаем билдер и передаем контекст приложения
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // в билдере указываем заголовок окна (можно указывать как ресурс, так и строку)
+        builder.setTitle(R.string.exclamation)
+                // указываем сообщение в окне (также есть вариант со строковым параметром)
+                .setMessage(message)
+                // можно указать и пиктограмму
+                .setIcon(R.mipmap.ic_launcher_round)
+                // из этого окна нельзя выйти кнопкой back
+                .setCancelable(false)
+                // устанавливаем кнопку (название кнопки также можно задавать строкой)
+                .setPositiveButton(R.string.button,
+                        // Ставим слушатель, нажатие будем обрабатывать
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(getContext(), "Кнопка нажата", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 }

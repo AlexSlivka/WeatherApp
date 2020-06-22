@@ -38,4 +38,7 @@
     <string name="menu_change_city">Change city</string>
     <string name="menu_history">History</string>
 
+    <string name="exclamation">Important message!</string>
+    <string name="button">OK</string>
+
 </resources>
