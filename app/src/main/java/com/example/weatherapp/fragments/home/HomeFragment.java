@@ -56,9 +56,6 @@ public class HomeFragment extends Fragment implements Constants {
 
     private boolean visibilityWindTextView = false;
     private boolean visibilityPressureTextView = false;
-    private boolean updatedDataFromServer = false;
-
-    private String updateBase;
 
     Date currentDate = new Date();
 
@@ -177,8 +174,6 @@ public class HomeFragment extends Fragment implements Constants {
                             result.append(tempVariable).append("\n");
                         }
                         String resultStr = result.toString();
-                        //updatedDataFromServer = true;
-                        updateBase = resultStr;
                         in.close();
 
                         // преобразование данных запроса в модель
@@ -211,7 +206,6 @@ public class HomeFragment extends Fragment implements Constants {
         } catch (MalformedURLException e) {
             Log.e(TAG, "Fail URI", e);
             e.printStackTrace();
-            alertDialogMessageHome("Fail");
         }
     }
 
