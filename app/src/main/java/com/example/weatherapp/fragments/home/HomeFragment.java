@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.weatherapp.Constants;
-import com.example.weatherapp.EventBus;
 import com.example.weatherapp.R;
 import com.example.weatherapp.model.WeatherRequest;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 import java.util.Set;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -58,7 +48,6 @@ public class HomeFragment extends Fragment implements Constants {
     private boolean visibilityPressureTextView = false;
     private boolean updatedDataFromServer = false;
 
-    private String updateBase;
 
     Date currentDate = new Date();
 
@@ -159,72 +148,26 @@ public class HomeFragment extends Fragment implements Constants {
     }
 
     private void updateWeatherDataFromServer() {
-        try {
-            final String weather_city = String.format(WEATHER_URL, city);
-            final URL uri = new URL(weather_city + "f52310dbfdea19138786c8eae8eb6138");
-            final Handler handler = new Handler(); // Запоминаем основной поток
-            new Thread(new Runnable() {
-                public void run() {
-                    HttpsURLConnection urlConnection = null;
-                    try {
-                        urlConnection = (HttpsURLConnection) uri.openConnection();
-                        urlConnection.setRequestMethod("GET"); // установка метода получения данных -GET
-                        urlConnection.setReadTimeout(10000); // установка таймаута - 10 000 миллисекунд
-                        BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); // читаем  данные в поток
-                        StringBuilder result = new StringBuilder(1024);
-                        String tempVariable;
-                        while ((tempVariable = in.readLine()) != null) {
-                            result.append(tempVariable).append("\n");
-                        }
-                        String resultStr = result.toString();
-                        //updatedDataFromServer = true;
-                        updateBase = resultStr;
-                        in.close();
-
-                        // преобразование данных запроса в модель
-                        Gson gson = new Gson();
-                        final WeatherRequest weatherRequest = gson.fromJson(resultStr, WeatherRequest.class);
-                        // Возвращаемся к основному потоку
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                displayWeather(weatherRequest);
-                            }
-                        });
-                    } catch (Exception e) {
-                        Log.e(TAG, "Fail connection", e);
-                        e.printStackTrace();
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                alertDialogMessageHome("Fail connection");
-                                cityTextView.setText(city);
-                            }
-                        });
-                    } finally {
-                        if (null != urlConnection) {
-                            urlConnection.disconnect();
-                        }
-                    }
-                }
-            }).start();
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "Fail URI", e);
-            e.printStackTrace();
-            alertDialogMessageHome("Fail");
+        UpdateFromServer updateFromServer = new UpdateFromServer(city);
+        WeatherRequest weatherRequest = updateFromServer.update();
+        if (weatherRequest != null) {
+            DataPreparation dataPreparation = new DataPreparation(weatherRequest);
+            displayWeather(dataPreparation);
+        } else {
+            cityTextView.setText(city);
+            alertDialogMessageHome("Fail connection");
         }
     }
 
-    private void displayWeather(WeatherRequest weatherRequest) {
-        String cityFromServer = weatherRequest.getName();
-        city = cityFromServer;
-        String tempNowValueForList = String.format(Locale.getDefault(), "%.0f", weatherRequest.getMain().getTemp());
-        recordHistory(tempNowValueForList);
+    private void displayWeather(DataPreparation dataPreparation) {
+        city = dataPreparation.getCityFromServer();
+        tempNowValue = dataPreparation.getTempNowValueFromServer();
+        recordHistory(tempNowValue);
         sendHistoryFromHome();
-        tempAtDayOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_max());
-        tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", weatherRequest.getMain().getTemp_min());
-        windTodayValue = String.format(Locale.getDefault(), "%d", weatherRequest.getWind().getSpeed());
-        pressureTodayValue = String.format(Locale.getDefault(), "%d", weatherRequest.getMain().getPressure());
+        tempAtDayOfTodayValue = dataPreparation.getTempAtDayOfTodayFromServer();
+        tempAtNightOfTodayValue = dataPreparation.getTempAtNightOfTodayFromServer();
+        windTodayValue = dataPreparation.getWindTodayFromServer();
+        pressureTodayValue = dataPreparation.getPressureTodayFromServer();
         setValueToView();
     }
 
