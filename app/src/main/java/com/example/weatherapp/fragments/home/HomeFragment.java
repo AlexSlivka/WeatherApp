@@ -147,7 +147,7 @@ public class HomeFragment extends Fragment implements Constants {
         });
     }
 
-    private void updateWeatherDataFromServer() {
+    private void updateWeatherDataFromServer() {//здесь происходит вызов обновления погоды
         UpdateFromServer updateFromServer = new UpdateFromServer(city);
         WeatherRequest weatherRequest = updateFromServer.update();
         if (weatherRequest != null) {
