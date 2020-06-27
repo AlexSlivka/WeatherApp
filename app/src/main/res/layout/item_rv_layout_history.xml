@@ -8,7 +8,7 @@
         android:id="@+id/item_textview_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/basic_size_text"
+        android:textSize="@dimen/history_on_list_size_text"
         android:textColor="@android:color/black"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"

@@ -23,7 +23,7 @@
     <string name="additional_settings">доп.настройки</string>
     <string name="select_city">выбрать город</string>
     <string name="history_button_text">ИСТОРИЯ</string>
-    <string name="history_data_list">В городе %s температура %s "\u2103"</string>
+    <string name="history_data_list">%s "/" %s "\u2103" "/" %s </string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -1,5 +1,6 @@
 package com.example.weatherapp.fragments.home;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -22,6 +23,8 @@ import com.example.weatherapp.R;
 import com.example.weatherapp.rest.OpenWeatherRepo;
 import com.example.weatherapp.rest.entities.WeatherRequestRestModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Locale;
@@ -55,10 +58,6 @@ public class HomeFragment extends Fragment implements Constants {
 
     private boolean visibilityWindTextView = false;
     private boolean visibilityPressureTextView = false;
-    private boolean updatedDataFromServer = false;
-
-
-    Date currentDate = new Date();
 
     SharedPreferences sPref;
     SharedPreferences sPrefHistory;
@@ -68,17 +67,15 @@ public class HomeFragment extends Fragment implements Constants {
     private String tempAtNightOfTodayValue = "0";
     private String windTodayValue = "0";
     private String pressureTodayValue = "0";
+    private String dateValue;
 
     private Set<String> dataHistoryWeathers;
 
     private int tempDefault = 0;
     private int chanceOfRainDefault = 0;
-    private int windDefault = 0;
-    private int pressureDefault = 100;
 
     private static final String LIFECYCLE = "LIFE_CYCLE";
     private int requestCodeChangeCityActivity = 100;
-
 
     private static final String TAG = "WEATHER";
     private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&appid=";
@@ -120,10 +117,10 @@ public class HomeFragment extends Fragment implements Constants {
     }
 
     private void setDate() {
-        //  DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", getContext());//????
-        //  String dateText = dateFormat.format(currentDate);
-        String dateText = "Now";
-        dateNow.setText(dateText);
+        Calendar c = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        dateValue = df.format(c.getTime());
+        dateNow.setText(dateValue);
     }
 
     private void makeToast(String message) {
@@ -150,8 +147,6 @@ public class HomeFragment extends Fragment implements Constants {
             public void onClick(View v) {
                 tempDefault += 5;
                 chanceOfRainDefault += 1;
-                windDefault += 2;
-                pressureDefault += 15;
                 updateWeatherDataFromServer();
             }
         });
@@ -212,9 +207,8 @@ public class HomeFragment extends Fragment implements Constants {
     }
 
 
-
     private void recordHistory(String tempNowValueForList) {
-        String dataForList = getString(R.string.history_data_list, city, tempNowValueForList);
+        String dataForList = getString(R.string.history_data_list, city, tempNowValueForList, dateValue);
         dataHistoryWeathers.add(dataForList);
         tempNowValue = tempNowValueForList;
     }
