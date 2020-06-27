@@ -70,7 +70,7 @@ public class UpdateFromServer {
                     } catch (Exception e) {
                         Log.e(TAG, "Fail connection", e);
                         e.printStackTrace();
-                        weatherRequest = null;
+                       // weatherRequest = null;
                     } finally {
                         if (null != urlConnection) {
                             urlConnection.disconnect();

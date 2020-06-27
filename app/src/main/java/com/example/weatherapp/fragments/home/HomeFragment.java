@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +20,17 @@ import androidx.fragment.app.Fragment;
 import com.example.weatherapp.Constants;
 import com.example.weatherapp.R;
 import com.example.weatherapp.model.WeatherRequest;
+import com.example.weatherapp.rest.OpenWeatherRepo;
+import com.example.weatherapp.rest.entities.WeatherRequestRestModel;
 
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Set;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -43,6 +51,8 @@ public class HomeFragment extends Fragment implements Constants {
     private TextView chanceOfRainTomorrow;
 
     private Button updateBtn;
+
+    private ProgressBar progressBar;
 
     private boolean visibilityWindTextView = false;
     private boolean visibilityPressureTextView = false;
@@ -107,6 +117,7 @@ public class HomeFragment extends Fragment implements Constants {
         tempAtNightOfTomorrow = view.findViewById(R.id.temp_at_night_tomorrow_value);
         chanceOfRainTomorrow = view.findViewById(R.id.chance_of_rain_tomorrow_value);
         updateBtn = view.findViewById(R.id.update_button);
+        progressBar = view.findViewById(R.id.progressBar);
     }
 
     private void setDate() {
@@ -148,7 +159,36 @@ public class HomeFragment extends Fragment implements Constants {
     }
 
     private void updateWeatherDataFromServer() {
-        UpdateFromServer updateFromServer = new UpdateFromServer(city);
+        progressBar.setVisibility(View.VISIBLE);
+        OpenWeatherRepo.getInstance().getAPI().loadWeather(city + ",ru",
+                "f52310dbfdea19138786c8eae8eb6138", "metric")
+                .enqueue(new Callback<WeatherRequestRestModel>() {
+                    @Override
+                    public void onResponse(@NonNull Call<WeatherRequestRestModel> call,
+                                           @NonNull Response<WeatherRequestRestModel> response) {
+                        if (response.body() != null && response.isSuccessful()) {
+                            renderWeather(response.body());
+                        } else {
+                            //Похоже, код у нас не в диапазоне [200..300) и случилась ошибка
+                            //обрабатываем ее
+                            if (response.code() == 500) {
+                                //ой, случился Internal Server Error. Решаем проблему
+                            } else if (response.code() == 401) {
+                                //не авторизованы, что-то с этим делаем.
+                                //например, открываем страницу с логинкой
+                            }// и так далее
+                        }
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    //сбой при интернет подключении
+                    @Override
+                    public void onFailure(Call<WeatherRequestRestModel> call, Throwable t) {
+                        makeToast(getString(R.string.network_error));
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+       /* UpdateFromServer updateFromServer = new UpdateFromServer(city);
         WeatherRequest weatherRequest = updateFromServer.update();
         if (weatherRequest != null) {
             DataPreparation dataPreparation = new DataPreparation(weatherRequest);
@@ -156,8 +196,29 @@ public class HomeFragment extends Fragment implements Constants {
         } else {
             cityTextView.setText(city);
             alertDialogMessageHome("Fail connection");
-        }
+        }*/
     }
+
+    private void renderWeather(WeatherRequestRestModel model) {
+        city = model.name;
+        tempNowValue = String.format(Locale.getDefault(), "%.0f", model.main.temp);
+        tempAtDayOfTodayValue = String.format(Locale.getDefault(), "%.1f", model.main.tempMax);
+        tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", model.main.tempMin);
+        windTodayValue = String.format(Locale.getDefault(), "%.1f", model.wind.speed);
+        pressureTodayValue = String.format(Locale.getDefault(), "%.1f", model.main.pressure);
+        recordHistory(tempNowValue);
+        sendHistoryFromHome();
+        setValueToView();
+
+       /* setPlaceName(model.name, model.sys.country);
+        setDetails(model.weather[0].description, model.main.humidity, model.main.pressure);
+        setCurrentTemp(model.main.temp);
+        setUpdatedText(model.dt);
+        setWeatherIcon(model.weather[0].id,
+                model.sys.sunrise * 1000,
+                model.sys.sunset * 1000);*/
+    }
+
 
     private void displayWeather(DataPreparation dataPreparation) {
         city = dataPreparation.getCityFromServer();

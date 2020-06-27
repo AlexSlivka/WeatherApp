@@ -40,5 +40,6 @@
 
     <string name="exclamation">Important message!</string>
     <string name="button">OK</string>
+    <string name="network_error">Check your internet connection</string>
 
 </resources>
