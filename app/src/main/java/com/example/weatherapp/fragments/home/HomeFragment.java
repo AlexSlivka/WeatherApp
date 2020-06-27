@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.example.weatherapp.Constants;
 import com.example.weatherapp.R;
 import com.example.weatherapp.rest.OpenWeatherRepo;
 import com.example.weatherapp.rest.entities.WeatherRequestRestModel;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -51,10 +53,11 @@ public class HomeFragment extends Fragment implements Constants {
     private TextView tempAtDayOfTomorrow;
     private TextView tempAtNightOfTomorrow;
     private TextView chanceOfRainTomorrow;
+    private TextView precipitationNow;
 
     private Button updateBtn;
 
-    private ProgressBar progressBar;
+    private ImageView imageView;
 
     private boolean visibilityWindTextView = false;
     private boolean visibilityPressureTextView = false;
@@ -97,7 +100,6 @@ public class HomeFragment extends Fragment implements Constants {
         dataHistoryWeathers = new LinkedHashSet<>();
     }
 
-
     private void initViews(@NonNull View view) {
         cityTextView = view.findViewById(R.id.city_textView);
         tempNow = view.findViewById(R.id.temp_now_textView);
@@ -113,7 +115,8 @@ public class HomeFragment extends Fragment implements Constants {
         tempAtNightOfTomorrow = view.findViewById(R.id.temp_at_night_tomorrow_value);
         chanceOfRainTomorrow = view.findViewById(R.id.chance_of_rain_tomorrow_value);
         updateBtn = view.findViewById(R.id.update_button);
-        progressBar = view.findViewById(R.id.progressBar);
+        imageView = view.findViewById(R.id.precipitation_now_imageView);
+        precipitationNow = view.findViewById(R.id.precipitation_now_textView);
     }
 
     private void setDate() {
@@ -153,7 +156,6 @@ public class HomeFragment extends Fragment implements Constants {
     }
 
     private void updateWeatherDataFromServer() {
-        progressBar.setVisibility(View.VISIBLE);
         OpenWeatherRepo.getInstance().getAPI().loadWeather(city + ",ru",
                 "f52310dbfdea19138786c8eae8eb6138", "metric")
                 .enqueue(new Callback<WeatherRequestRestModel>() {
@@ -174,14 +176,12 @@ public class HomeFragment extends Fragment implements Constants {
                                 //например, открываем страницу с логинкой
                             }// и так далее
                         }
-                        progressBar.setVisibility(View.GONE);
                     }
 
                     //сбой при интернет подключении
                     @Override
                     public void onFailure(Call<WeatherRequestRestModel> call, Throwable t) {
                         makeToast(getString(R.string.network_error));
-                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
@@ -196,16 +196,10 @@ public class HomeFragment extends Fragment implements Constants {
         recordHistory(tempNowValue);
         sendHistoryFromHome();
         setValueToView();
-
-       /* setPlaceName(model.name, model.sys.country);
-        setDetails(model.weather[0].description, model.main.humidity, model.main.pressure);
-        setCurrentTemp(model.main.temp);
-        setUpdatedText(model.dt);
         setWeatherIcon(model.weather[0].id,
                 model.sys.sunrise * 1000,
-                model.sys.sunset * 1000);*/
+                model.sys.sunset * 1000);
     }
-
 
     private void recordHistory(String tempNowValueForList) {
         String dataForList = getString(R.string.history_data_list, city, tempNowValueForList, dateValue);
@@ -296,5 +290,69 @@ public class HomeFragment extends Fragment implements Constants {
         alert.show();
     }
 
+    private void loadImageWithPicasso(String iconAddress) {
+        Picasso.get()
+                .load(iconAddress)
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(imageView);
+    }
+
+    private void setWeatherIcon(int actualId, long sunrise, long sunset) {
+        int id = actualId / 100;
+        String icon = "";
+
+        if (actualId == 800) {
+            long currentTime = new Date().getTime();
+            if (currentTime >= sunrise && currentTime < sunset) {
+                icon = "https://images.unsplash.com/photo-1525490829609-d166ddb58678?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1049&q=80";
+                precipitationNow.setText(getString(R.string.weather_sunny));
+                //sunny
+            } else {
+                icon = "https://images.unsplash.com/photo-1517838503506-3b561768809d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1051&q=80";
+                precipitationNow.setText(getString(R.string.weather_clear_night));
+                //clear_night
+            }
+        } else {
+            switch (id) {
+                case 2: {
+                    icon = "https://images.unsplash.com/photo-1522579579163-555c2004d810?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1053&q=80";
+                    precipitationNow.setText(getString(R.string.weather_thunder));
+                    //thunder
+                    break;
+                }
+                case 3: {
+                    icon = "https://images.unsplash.com/photo-1508873760731-9c3d0bb6b961?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80";
+                    precipitationNow.setText(getString(R.string.weather_drizzle));
+                    //drizzle
+                    break;
+                }
+                case 5: {
+                    icon = "https://images.unsplash.com/photo-1536598315365-c7bae6fd4328?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80";
+                    precipitationNow.setText(getString(R.string.weather_rainy));
+                    //rainy
+                    break;
+                }
+                case 6: {
+                    icon = "https://images.unsplash.com/photo-1483143993389-85aa047c3aef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80";
+                    precipitationNow.setText(getString(R.string.weather_snowy));
+                    //snowy
+                    break;
+                }
+                case 7: {
+                    icon = "https://images.unsplash.com/photo-1581184856164-0f32a960c705?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80";
+                    precipitationNow.setText(getString(R.string.weather_foggy));
+                    //foggy
+                    break;
+                }
+                case 8: {
+                    icon = "https://images.unsplash.com/uploads/14122598319144c6eac10/5f8e7ade?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1214&q=80";
+                    precipitationNow.setText(getString(R.string.weather_cloudy));
+                    //cloudy
+                    break;
+                }
+            }
+        }
+        loadImageWithPicasso(icon);
+    }
 }
 

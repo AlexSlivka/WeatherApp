@@ -40,4 +40,13 @@
     <string name="button">Хорошо</string>
 
     <string name="network_error">Проверте соединение с интернетом</string>
+
+    <string name="weather_sunny">солнечно</string>
+    <string name="weather_clear_night">ясная ночь</string>
+    <string name="weather_foggy">туман</string>
+    <string name="weather_cloudy">облачно</string>
+    <string name="weather_rainy">дождь</string>
+    <string name="weather_snowy">снег</string>
+    <string name="weather_thunder">гроза</string>
+    <string name="weather_drizzle">изморось</string>
 </resources>

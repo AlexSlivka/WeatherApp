@@ -42,4 +42,13 @@
     <string name="button">OK</string>
     <string name="network_error">Check your internet connection</string>
 
+    <string name="weather_sunny">sunny</string>
+    <string name="weather_clear_night">clear night</string>
+    <string name="weather_foggy">foggy</string>
+    <string name="weather_cloudy">cloudy</string>
+    <string name="weather_rainy">rainy</string>
+    <string name="weather_snowy">cnowy</string>
+    <string name="weather_thunder">thunder</string>
+    <string name="weather_drizzle">drizzle</string>
+
 </resources>
