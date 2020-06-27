@@ -14,12 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.Constants;
-import com.example.weatherapp.EventBus;
 import com.example.weatherapp.R;
-import com.example.weatherapp.events.SendHistoryEvent;
-import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

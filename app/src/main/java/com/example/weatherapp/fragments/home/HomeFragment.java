@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.weatherapp.Constants;
 import com.example.weatherapp.R;
-import com.example.weatherapp.model.WeatherRequest;
 import com.example.weatherapp.rest.OpenWeatherRepo;
 import com.example.weatherapp.rest.entities.WeatherRequestRestModel;
 
@@ -172,8 +171,10 @@ public class HomeFragment extends Fragment implements Constants {
                             //Похоже, код у нас не в диапазоне [200..300) и случилась ошибка
                             //обрабатываем ее
                             if (response.code() == 500) {
+                                alertDialogMessageHome("Internal Server Error");
                                 //ой, случился Internal Server Error. Решаем проблему
                             } else if (response.code() == 401) {
+                                alertDialogMessageHome("You are not logged in the system");
                                 //не авторизованы, что-то с этим делаем.
                                 //например, открываем страницу с логинкой
                             }// и так далее
@@ -188,15 +189,6 @@ public class HomeFragment extends Fragment implements Constants {
                         progressBar.setVisibility(View.GONE);
                     }
                 });
-       /* UpdateFromServer updateFromServer = new UpdateFromServer(city);
-        WeatherRequest weatherRequest = updateFromServer.update();
-        if (weatherRequest != null) {
-            DataPreparation dataPreparation = new DataPreparation(weatherRequest);
-            displayWeather(dataPreparation);
-        } else {
-            cityTextView.setText(city);
-            alertDialogMessageHome("Fail connection");
-        }*/
     }
 
     private void renderWeather(WeatherRequestRestModel model) {
@@ -220,17 +212,6 @@ public class HomeFragment extends Fragment implements Constants {
     }
 
 
-    private void displayWeather(DataPreparation dataPreparation) {
-        city = dataPreparation.getCityFromServer();
-        tempNowValue = dataPreparation.getTempNowValueFromServer();
-        recordHistory(tempNowValue);
-        sendHistoryFromHome();
-        tempAtDayOfTodayValue = dataPreparation.getTempAtDayOfTodayFromServer();
-        tempAtNightOfTodayValue = dataPreparation.getTempAtNightOfTodayFromServer();
-        windTodayValue = dataPreparation.getWindTodayFromServer();
-        pressureTodayValue = dataPreparation.getPressureTodayFromServer();
-        setValueToView();
-    }
 
     private void recordHistory(String tempNowValueForList) {
         String dataForList = getString(R.string.history_data_list, city, tempNowValueForList);
