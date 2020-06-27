@@ -296,7 +296,7 @@ public class HomeFragment extends Fragment implements Constants {
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(imageView);
     }
-
+//for git
     private void setWeatherIcon(int actualId, long sunrise, long sunset) {
         int id = actualId / 100;
         String icon = "";
