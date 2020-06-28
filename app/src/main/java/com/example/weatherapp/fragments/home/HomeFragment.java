@@ -19,10 +19,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.weatherapp.App;
 import com.example.weatherapp.Constants;
 import com.example.weatherapp.R;
 import com.example.weatherapp.rest.OpenWeatherRepo;
 import com.example.weatherapp.rest.entities.WeatherRequestRestModel;
+import com.example.weatherapp.room.HistoryDao;
+import com.example.weatherapp.room.HistoryModel;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -30,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 import retrofit2.Call;
@@ -63,7 +67,6 @@ public class HomeFragment extends Fragment implements Constants {
     private boolean visibilityPressureTextView = false;
 
     SharedPreferences sPref;
-    SharedPreferences sPrefHistory;
 
     private String tempNowValue = "1";
     private String tempAtDayOfTodayValue = "2";
@@ -72,10 +75,10 @@ public class HomeFragment extends Fragment implements Constants {
     private String pressureTodayValue = "0";
     private String dateValue;
 
-    private Set<String> dataHistoryWeathers;
-
     private int tempDefault = 0;
     private int chanceOfRainDefault = 0;
+
+    private HistoryDao historyDao;
 
     private static final String LIFECYCLE = "LIFE_CYCLE";
     private int requestCodeChangeCityActivity = 100;
@@ -97,7 +100,6 @@ public class HomeFragment extends Fragment implements Constants {
         setDate();
         setValueToView();
         setUpdateClickListener();
-        dataHistoryWeathers = new LinkedHashSet<>();
     }
 
     private void initViews(@NonNull View view) {
@@ -117,6 +119,10 @@ public class HomeFragment extends Fragment implements Constants {
         updateBtn = view.findViewById(R.id.update_button);
         imageView = view.findViewById(R.id.precipitation_now_imageView);
         precipitationNow = view.findViewById(R.id.precipitation_now_textView);
+
+        historyDao = App
+                .getInstance()
+                .getHistoryDao();
     }
 
     private void setDate() {
@@ -193,30 +199,20 @@ public class HomeFragment extends Fragment implements Constants {
         tempAtNightOfTodayValue = String.format(Locale.getDefault(), "%.1f", model.main.tempMin);
         windTodayValue = String.format(Locale.getDefault(), "%.1f", model.wind.speed);
         pressureTodayValue = String.format(Locale.getDefault(), "%.1f", model.main.pressure);
-        recordHistory(tempNowValue);
-        sendHistoryFromHome();
+        recordHistoryInDatabase();
         setValueToView();
         setWeatherIcon(model.weather[0].id,
                 model.sys.sunrise * 1000,
                 model.sys.sunset * 1000);
     }
 
-    private void recordHistory(String tempNowValueForList) {
-        String dataForList = getString(R.string.history_data_list, city, tempNowValueForList, dateValue);
-        dataHistoryWeathers.add(dataForList);
-        tempNowValue = tempNowValueForList;
-    }
 
-    private void sendHistoryFromHome() {
-        sPrefHistory = getContext().getSharedPreferences("History", MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPrefHistory.edit();
-        ed.putStringSet(HISTORY_DATA_KEY, dataHistoryWeathers);
-        ed.commit();
-    }
-
-    void loadHistoryFromPreferencesAfterStop() {
-        sPrefHistory = getContext().getSharedPreferences("History", MODE_PRIVATE);
-        dataHistoryWeathers = sPrefHistory.getStringSet(HISTORY_DATA_KEY, new LinkedHashSet<String>());
+    private void recordHistoryInDatabase() {
+        HistoryModel historyModel = new HistoryModel();
+        historyModel.cityNameBase = city;
+        historyModel.tempNowBase = tempNowValue;
+        historyModel.dateAndTimeBase = dateValue;
+        historyDao.insertHistory(historyModel);
     }
 
     private void setVisibilityPressureTextView(boolean visibilityPressureTextView) {
@@ -243,21 +239,13 @@ public class HomeFragment extends Fragment implements Constants {
     public void onStart() {
         super.onStart();
         loadCityFromPreferences();
-        loadHistoryFromPreferencesAfterStop();
-        updateWeatherDataFromServer();
         setVisibilityWindTextView(visibilityWindTextView);
         setVisibilityPressureTextView(visibilityPressureTextView);
     }
 
-    @Override
-    public void onStop() {
-        sendHistoryFromHome();
-        super.onStop();
-    }
-
     void loadCityFromPreferences() {
-        sPref = getContext().getSharedPreferences("CityName", MODE_PRIVATE);
-        String savedText = sPref.getString(CITY_DATA_KEY, "");
+        sPref = Objects.requireNonNull(getContext()).getSharedPreferences("CityName", MODE_PRIVATE);
+        String savedText = sPref.getString(CITY_DATA_KEY, "Moscow");
         if (!savedText.equals(city)) {
             city = savedText;
             updateWeatherDataFromServer();

@@ -1,11 +1,9 @@
 package com.example.weatherapp.fragments.history;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,19 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weatherapp.App;
 import com.example.weatherapp.Constants;
 import com.example.weatherapp.R;
+import com.example.weatherapp.room.HistoryDao;
+import com.example.weatherapp.room.HistoryModel;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static android.content.Context.MODE_PRIVATE;
+import java.util.List;
 
 public class HistoryFragment extends Fragment implements Constants {
     private RecyclerView recyclerViewHistory;
     private String[] listData;
 
-    SharedPreferences sPrefHistory;
+    private HistoryDao historyDao;
 
     @Nullable
     @Override
@@ -38,12 +36,15 @@ public class HistoryFragment extends Fragment implements Constants {
         super.onViewCreated(view, savedInstanceState);
         setRetainInstance(true);
         initViewHistory(view);
-        loadHistoryFromPreferences();
+        loadHistoryFromDatabase();
         setupRecyclerViewHistory();
     }
 
     private void initViewHistory(@NonNull View view) {
         recyclerViewHistory = view.findViewById(R.id.recycler_view_history);
+        historyDao = App
+                .getInstance()
+                .getHistoryDao();
     }
 
     private void setupRecyclerViewHistory() {
@@ -53,16 +54,14 @@ public class HistoryFragment extends Fragment implements Constants {
         recyclerViewHistory.setAdapter(adapterHistory);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        loadHistoryFromPreferences();
-    }
-
-    void loadHistoryFromPreferences() {
-        sPrefHistory = getContext().getSharedPreferences("History", MODE_PRIVATE);
-        Set<String> ret = sPrefHistory.getStringSet(HISTORY_DATA_KEY, new HashSet<String>());
-        listData = ret.toArray(new String[ret.size()]);
+    public void loadHistoryFromDatabase() {
+        List<HistoryModel> historyModelList = historyDao.getAllHistory();
+        listData = new String[historyModelList.size()];
+        int i = 0;
+        for (HistoryModel h : historyModelList) {
+            listData[i] = getString(R.string.history_data_list, h.cityNameBase, h.tempNowBase, h.dateAndTimeBase);
+            i++;
+        }
     }
 
 }

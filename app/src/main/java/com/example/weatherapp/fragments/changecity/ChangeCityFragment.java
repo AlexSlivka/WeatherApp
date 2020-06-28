@@ -23,6 +23,7 @@ import com.example.weatherapp.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -113,12 +114,12 @@ public class ChangeCityFragment extends Fragment implements OnItemCitiesClick, C
     }
 
     void saveCityToPreferences(String name) {
-        sPref = getContext().getSharedPreferences("CityName", MODE_PRIVATE);
+        sPref = Objects.requireNonNull(getContext()).getSharedPreferences("CityName", MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString(CITY_DATA_KEY, name);
         ed.putBoolean(WIND_CHECKBOX_DATA_KEY, windSpeedChBox.isChecked());
         ed.putBoolean(PRESSURE_CHECKBOX_DATA_KEY, pressureChBox.isChecked());
-        ed.commit();
+        ed.apply();
         Toast.makeText(getContext(), "Изменения сохранены", Toast.LENGTH_SHORT).show();
 
     }
