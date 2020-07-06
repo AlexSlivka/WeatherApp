@@ -1,10 +1,15 @@
 package com.example.weatherapp;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        initNotificationChannel();
     }
 
     @Override
@@ -61,6 +67,18 @@ public class MainActivity extends AppCompatActivity implements Constants {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    // инициализация канала нотификаций
+    private void initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel("2", "name", importance);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 
 }
