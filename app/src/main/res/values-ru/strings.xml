@@ -49,4 +49,5 @@
     <string name="weather_snowy">снег</string>
     <string name="weather_thunder">гроза</string>
     <string name="weather_drizzle">изморось</string>
+    <string name="my_location_text">MY LOCATION</string>
 </resources>

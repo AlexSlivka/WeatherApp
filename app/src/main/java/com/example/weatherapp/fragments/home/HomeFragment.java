@@ -1,9 +1,16 @@
 package com.example.weatherapp.fragments.home;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +24,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.weatherapp.App;
 import com.example.weatherapp.Constants;
+import com.example.weatherapp.GPSHelper;
 import com.example.weatherapp.R;
 import com.example.weatherapp.rest.OpenWeatherRepo;
 import com.example.weatherapp.rest.entities.WeatherRequestRestModel;
@@ -40,6 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.LOCATION_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
 public class HomeFragment extends Fragment implements Constants {
@@ -60,6 +70,7 @@ public class HomeFragment extends Fragment implements Constants {
     private TextView precipitationNow;
 
     private Button updateBtn;
+    private Button myLocationBtn;
 
     private ImageView imageView;
 
@@ -80,8 +91,11 @@ public class HomeFragment extends Fragment implements Constants {
 
     private HistoryDao historyDao;
 
+    private LocationManager mLocManager = null;
+
     private static final String LIFECYCLE = "LIFE_CYCLE";
     private int requestCodeChangeCityActivity = 100;
+    private final static String MSG_NO_DATA = "No data";
 
     private static final String TAG = "WEATHER";
     private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&appid=";
@@ -100,7 +114,18 @@ public class HomeFragment extends Fragment implements Constants {
         setDate();
         setValueToView();
         setUpdateClickListener();
+        setMyLocationClickListener();
     }
+
+    private void setMyLocationClickListener() {
+        myLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findMyLocation();
+            }
+        });
+    }
+
 
     private void initViews(@NonNull View view) {
         cityTextView = view.findViewById(R.id.city_textView);
@@ -117,6 +142,7 @@ public class HomeFragment extends Fragment implements Constants {
         tempAtNightOfTomorrow = view.findViewById(R.id.temp_at_night_tomorrow_value);
         chanceOfRainTomorrow = view.findViewById(R.id.chance_of_rain_tomorrow_value);
         updateBtn = view.findViewById(R.id.update_button);
+        myLocationBtn = view.findViewById(R.id.my_location_button);
         imageView = view.findViewById(R.id.precipitation_now_imageView);
         precipitationNow = view.findViewById(R.id.precipitation_now_textView);
 
@@ -241,6 +267,7 @@ public class HomeFragment extends Fragment implements Constants {
         loadCityFromPreferences();
         setVisibilityWindTextView(visibilityWindTextView);
         setVisibilityPressureTextView(visibilityPressureTextView);
+        updateWeatherDataFromServer();
     }
 
     void loadCityFromPreferences() {
@@ -342,5 +369,30 @@ public class HomeFragment extends Fragment implements Constants {
         }
         loadImageWithPicasso(icon);
     }
+
+    private void findMyLocation() {
+        makeToast("My Location");
+
+        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+        } else {
+            GPSHelper gpsHelper = new GPSHelper();
+            Location loc = gpsHelper.getCurrentLocation(getContext());
+            if (loc != null) {
+                Log.d(TAG, "onCreateView: " + loc.getLatitude() + ", " + loc.getLongitude());
+                makeToast("Latitude: " + loc.getLatitude() + "\n" + "Longitude: " + loc.getLongitude());
+            } else {
+                makeToast("loc is null");
+            }
+
+        }
+    }
+
 }
 

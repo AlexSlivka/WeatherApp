@@ -50,5 +50,6 @@
     <string name="weather_snowy">cnowy</string>
     <string name="weather_thunder">thunder</string>
     <string name="weather_drizzle">drizzle</string>
+    <string name="my_location_text">MY LOCATION</string>
 
 </resources>
