@@ -15,11 +15,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.Constants;
+import com.example.weatherapp.MainActivity;
 import com.example.weatherapp.R;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -83,12 +89,18 @@ public class ChangeCityFragment extends Fragment implements OnItemCitiesClick, C
                     saveCityToPreferences(cityChange);
                     Snackbar.make(cityEnterEditText, "City changed", Snackbar.LENGTH_LONG)
                             .show();
+                    gotoHomeFragment();
                 } else {
                     alertDialogMessage("Check entered data");
                 }
             }
         });
     }
+
+    private void gotoHomeFragment() {
+     //   NavigationView navigationView = view.findViewById(R.id.nav_view);
+      //  NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        }
 
     private void alertDialogMessage(String message) {
         // Создаем билдер и передаем контекст приложения
