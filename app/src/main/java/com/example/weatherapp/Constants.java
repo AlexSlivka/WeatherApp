@@ -6,4 +6,6 @@ public interface Constants {
     public final static String CITY_DATA_KEY = "CITYDATAKEY";
     public final static String WIND_CHECKBOX_DATA_KEY = "WINDDATAKEY";
     public final static String PRESSURE_CHECKBOX_DATA_KEY = "PRESSUREDATAKEY";
+    public final static String FIRST_START_DATA_KEY = "FIRSTSTARTDATAKEY";
+
 }

@@ -32,6 +32,7 @@ import com.example.weatherapp.Constants;
 import com.example.weatherapp.GPSHelper;
 import com.example.weatherapp.R;
 import com.example.weatherapp.rest.OpenWeatherRepo;
+import com.example.weatherapp.rest.OpenWeatherRepoCoordinates;
 import com.example.weatherapp.rest.entities.WeatherRequestRestModel;
 import com.example.weatherapp.room.HistoryDao;
 import com.example.weatherapp.room.HistoryModel;
@@ -76,8 +77,10 @@ public class HomeFragment extends Fragment implements Constants {
 
     private boolean visibilityWindTextView = false;
     private boolean visibilityPressureTextView = false;
+    private boolean firstStart = true;
 
     SharedPreferences sPref;
+    SharedPreferences sPrefFirstStart;
 
     private String tempNowValue = "1";
     private String tempAtDayOfTodayValue = "2";
@@ -85,6 +88,8 @@ public class HomeFragment extends Fragment implements Constants {
     private String windTodayValue = "0";
     private String pressureTodayValue = "0";
     private String dateValue;
+    private String latitude = "0";
+    private String longitude = "0";
 
     private int tempDefault = 0;
     private int chanceOfRainDefault = 0;
@@ -115,6 +120,13 @@ public class HomeFragment extends Fragment implements Constants {
         setValueToView();
         setUpdateClickListener();
         setMyLocationClickListener();
+        loadFirstStartFromPreferences();
+        if (firstStart){
+            findMyLocation();
+            updateWeatherDataFromServerByCoordinates();
+            firstStart = false;
+            saveFirstStartToPreferences(firstStart);
+        }
     }
 
     private void setMyLocationClickListener() {
@@ -122,6 +134,7 @@ public class HomeFragment extends Fragment implements Constants {
             @Override
             public void onClick(View v) {
                 findMyLocation();
+                updateWeatherDataFromServerByCoordinates();
             }
         });
     }
@@ -267,7 +280,9 @@ public class HomeFragment extends Fragment implements Constants {
         loadCityFromPreferences();
         setVisibilityWindTextView(visibilityWindTextView);
         setVisibilityPressureTextView(visibilityPressureTextView);
-        updateWeatherDataFromServer();
+        if (!firstStart) {
+            updateWeatherDataFromServer();
+        }
     }
 
     void loadCityFromPreferences() {
@@ -280,6 +295,18 @@ public class HomeFragment extends Fragment implements Constants {
         visibilityWindTextView = sPref.getBoolean(WIND_CHECKBOX_DATA_KEY, false);
         visibilityPressureTextView = sPref.getBoolean(PRESSURE_CHECKBOX_DATA_KEY, false);
         makeToast("Get new City name");
+    }
+
+    void loadFirstStartFromPreferences() {
+        sPrefFirstStart = Objects.requireNonNull(getContext()).getSharedPreferences("FirstStart", MODE_PRIVATE);
+        firstStart = sPrefFirstStart.getBoolean(FIRST_START_DATA_KEY, true);
+    }
+
+    void saveFirstStartToPreferences(boolean start) {
+        sPrefFirstStart = Objects.requireNonNull(getContext()).getSharedPreferences("FirstStart", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPrefFirstStart.edit();
+        ed.putBoolean(FIRST_START_DATA_KEY, start);
+        ed.apply();
     }
 
     private void alertDialogMessageHome(String message) {
@@ -371,8 +398,6 @@ public class HomeFragment extends Fragment implements Constants {
     }
 
     private void findMyLocation() {
-        makeToast("My Location");
-
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -385,13 +410,45 @@ public class HomeFragment extends Fragment implements Constants {
             GPSHelper gpsHelper = new GPSHelper();
             Location loc = gpsHelper.getCurrentLocation(getContext());
             if (loc != null) {
+                latitude = String.valueOf(loc.getLatitude());
+                longitude = String.valueOf(loc.getLongitude());
                 Log.d(TAG, "onCreateView: " + loc.getLatitude() + ", " + loc.getLongitude());
-                makeToast("Latitude: " + loc.getLatitude() + "\n" + "Longitude: " + loc.getLongitude());
+                makeToast("Latitude: " + latitude + "\n" + "Longitude: " + longitude);
             } else {
                 makeToast("loc is null");
             }
-
         }
+    }
+
+    private void updateWeatherDataFromServerByCoordinates() {
+        OpenWeatherRepoCoordinates.getInstance().getAPI().loadWeather(latitude, longitude,
+                "f52310dbfdea19138786c8eae8eb6138", "metric")
+                .enqueue(new Callback<WeatherRequestRestModel>() {
+                    @Override
+                    public void onResponse(@NonNull Call<WeatherRequestRestModel> call,
+                                           @NonNull Response<WeatherRequestRestModel> response) {
+                        if (response.body() != null && response.isSuccessful()) {
+                            renderWeather(response.body());
+                        } else {
+                            //Похоже, код у нас не в диапазоне [200..300) и случилась ошибка
+                            //обрабатываем ее
+                            if (response.code() == 500) {
+                                alertDialogMessageHome("Internal Server Error");
+                                //ой, случился Internal Server Error. Решаем проблему
+                            } else if (response.code() == 401) {
+                                alertDialogMessageHome("You are not logged in the system");
+                                //не авторизованы, что-то с этим делаем.
+                                //например, открываем страницу с логинкой
+                            }// и так далее
+                        }
+                    }
+
+                    //сбой при интернет подключении
+                    @Override
+                    public void onFailure(Call<WeatherRequestRestModel> call, Throwable t) {
+                        makeToast(getString(R.string.network_error));
+                    }
+                });
     }
 
 }
