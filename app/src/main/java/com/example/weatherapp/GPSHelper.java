@@ -14,12 +14,11 @@ public class GPSHelper implements LocationListener {
 
     private static final String TAG = "GPSHelper";
 
-    public Location getCurrentLocation(Context mContext){
+    public Location getCurrentLocation(Context mContext) {
         int MIN_TIME_BW_UPDATES = 1000;
         int MIN_DISTANCE_CHANGE_FOR_UPDATES = 5;
         Location loc = null;
-        double latitude, longitude;
-
+        
         LocationManager locationManager = (LocationManager) mContext
                 .getSystemService(LOCATION_SERVICE);
 
@@ -44,18 +43,15 @@ public class GPSHelper implements LocationListener {
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     Log.d("Network", "Network");
-                    if (locationManager != null) {
-                        loc = locationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-                    }
+                    loc = locationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
                     if (loc != null) {
                         Log.d(TAG, "getCurrentLocation: " + loc.getLatitude() + ", " + loc.getLongitude());
                         return loc;
                     }
                 } catch (SecurityException e) {
-
+                    e.printStackTrace();
                 }
             }
         }
@@ -69,21 +65,15 @@ public class GPSHelper implements LocationListener {
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     Log.d("GPS Enabled", "GPS Enabled");
-                    if (locationManager != null) {
-                        loc = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if (loc != null) {
-                            latitude = loc.getLatitude();
-                            longitude = loc.getLongitude();
-                        }
-                    }
-                } catch (SecurityException e) {
+                    loc = locationManager
+                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
+                } catch (SecurityException e) {
+                    e.printStackTrace();
                 }
             }
         }
-        Location locErr = loc;
-        return locErr;
+        return loc;
     }
 
     @Override

@@ -96,14 +96,8 @@ public class HomeFragment extends Fragment implements Constants {
 
     private HistoryDao historyDao;
 
-    private LocationManager mLocManager = null;
-
     private static final String LIFECYCLE = "LIFE_CYCLE";
-    private int requestCodeChangeCityActivity = 100;
-    private final static String MSG_NO_DATA = "No data";
-
     private static final String TAG = "WEATHER";
-    private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&appid=";
 
     @Nullable
     @Override
@@ -120,13 +114,7 @@ public class HomeFragment extends Fragment implements Constants {
         setValueToView();
         setUpdateClickListener();
         setMyLocationClickListener();
-        loadFirstStartFromPreferences();
-        if (firstStart){
-            findMyLocation();
-            updateWeatherDataFromServerByCoordinates();
-            firstStart = false;
-            saveFirstStartToPreferences(firstStart);
-        }
+
     }
 
     private void setMyLocationClickListener() {
@@ -280,7 +268,13 @@ public class HomeFragment extends Fragment implements Constants {
         loadCityFromPreferences();
         setVisibilityWindTextView(visibilityWindTextView);
         setVisibilityPressureTextView(visibilityPressureTextView);
-        if (!firstStart) {
+        loadFirstStartFromPreferences();
+        if (firstStart){
+            findMyLocation();
+            updateWeatherDataFromServerByCoordinates();
+            firstStart = false;
+            saveFirstStartToPreferences(firstStart);
+        } else {
             updateWeatherDataFromServer();
         }
     }
