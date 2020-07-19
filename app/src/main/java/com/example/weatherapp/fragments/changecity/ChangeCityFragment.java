@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.Constants;
 import com.example.weatherapp.R;
+import com.example.weatherapp.events.EventBus;
+import com.example.weatherapp.events.StartSignInEvent;
+import com.example.weatherapp.events.SwitchOnHomeFragmentEvent;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -83,6 +86,8 @@ public class ChangeCityFragment extends Fragment implements OnItemCitiesClick, C
                     saveCityToPreferences(cityChange);
                     Snackbar.make(cityEnterEditText, "City changed", Snackbar.LENGTH_LONG)
                             .show();
+                    EventBus.getBus().post(new SwitchOnHomeFragmentEvent());
+
                 } else {
                     alertDialogMessage("Check entered data");
                 }

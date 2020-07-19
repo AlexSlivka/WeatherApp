@@ -3,14 +3,10 @@ package com.example.weatherapp.fragments.home;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,20 +26,21 @@ import com.example.weatherapp.App;
 import com.example.weatherapp.Constants;
 import com.example.weatherapp.GPSHelper;
 import com.example.weatherapp.R;
+import com.example.weatherapp.events.EventBus;
+import com.example.weatherapp.events.StartSignInEvent;
 import com.example.weatherapp.rest.OpenWeatherRepo;
 import com.example.weatherapp.rest.OpenWeatherRepoCoordinates;
 import com.example.weatherapp.rest.entities.WeatherRequestRestModel;
 import com.example.weatherapp.room.HistoryDao;
 import com.example.weatherapp.room.HistoryModel;
+import com.google.android.gms.common.SignInButton;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,6 +68,7 @@ public class HomeFragment extends Fragment implements Constants {
 
     private Button updateBtn;
     private Button myLocationBtn;
+    SignInButton signInButton;
 
     private ImageView imageView;
 
@@ -114,7 +111,16 @@ public class HomeFragment extends Fragment implements Constants {
         setValueToView();
         setUpdateClickListener();
         setMyLocationClickListener();
+        setSignInClickListener();
+    }
 
+    private void setSignInClickListener() {
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getBus().post(new StartSignInEvent());
+            }
+        });
     }
 
     private void setMyLocationClickListener() {
@@ -146,6 +152,8 @@ public class HomeFragment extends Fragment implements Constants {
         myLocationBtn = view.findViewById(R.id.my_location_button);
         imageView = view.findViewById(R.id.precipitation_now_imageView);
         precipitationNow = view.findViewById(R.id.precipitation_now_textView);
+        signInButton = view.findViewById(R.id.sign_in_button);
+        signInButton.setSize(SignInButton.SIZE_ICON_ONLY);
 
         historyDao = App
                 .getInstance()
