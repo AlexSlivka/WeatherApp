@@ -26,6 +26,19 @@ android {
         targetCompatibility = "8"
         sourceCompatibility = "8"
     }
+    flavorDimensions 'version'
+    productFlavors {
+        demo {
+            dimension 'version'
+            applicationIdSuffix '.demo'
+            versionNameSuffix '.demo'
+        }
+        master {
+            dimension 'version'
+            applicationIdSuffix '.master'
+            versionNameSuffix '.master'
+        }
+    }
 }
 
 dependencies {
