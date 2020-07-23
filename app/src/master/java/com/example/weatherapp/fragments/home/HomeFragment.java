@@ -277,6 +277,7 @@ public class HomeFragment extends Fragment implements Constants {
         setVisibilityWindTextView(visibilityWindTextView);
         setVisibilityPressureTextView(visibilityPressureTextView);
         loadFirstStartFromPreferences();
+        //различие в flavors , Добавил google-services.json в разные варианты flavors.
         if (firstStart){
             findMyLocation();
             updateWeatherDataFromServerByCoordinates();
