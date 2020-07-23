@@ -270,6 +270,7 @@ public class HomeFragment extends Fragment implements Constants {
         }
     }
 
+//Добавил google-services.json в разные варианты flavors.
     @Override
     public void onStart() {
         super.onStart();
